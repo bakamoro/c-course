@@ -1,0 +1,4 @@
+git add mmn2.1.c 
+git commit -m "name of commit"
+git push origin master
+
