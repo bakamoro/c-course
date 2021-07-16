@@ -1,4 +1,8 @@
 git add mmn2.1.c 
 git commit -m "name of commit"
+#pull the changes 
+git pull --rebase origin master
+#merges the conflicts
+#commit the changes --amend
 git push origin master
 
