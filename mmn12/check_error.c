@@ -2,87 +2,83 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-void re_array(char p[],char **p2){
-	char p1[81];
-	char **p3;
-	p2 = p3;
-	p = p1;
-}
-char *  bilt_array(char *p,int i){
-	char *p2;
-	while(i<strlen(p) && p[i] != ' ','\n'){
-		p2[i] = p[i];
-		i++;
-	}
-	if(p[i] != '\n')
-		i++;
-	return p2;
-}
-void read_word(FILE *fd,char *p){
-	int i = 0;
-	char c = fgetc(fd);
-	while(c != ' ' && (!feof(fd) && c != '\n')){
-		*(p + i) = c;
-		i++;
-		c = fgetc(fd);
-	}
-}
+#include "hash_table.h"
+#include "line_handler.h"
+
+//make a line from array of chasrs
 void read_line(FILE *fd,char p[81]){
 	int i = 0;
 	char c = fgetc(fd);
 	while(c != '\n' && (!feof(fd))){
-                p[i] = c;
-                i++;
-
-                c = fgetc(fd);
+            p[i] = c;
+            i++;
+            c = fgetc(fd);
         }
+	p[i] = c;
 }
-void number_check(char s[]){
+//check if the string is liglle number.
+int number_check(char s[],int line_number){
 	int i = 0;
 	while(i < strlen(s)){
-		if(s[i] == '.')
-			
+		if(s[i] == '.'){
+			printf("ERROR - line - %c - the asembler does not support decimal numbers\n",line_number);
+			return 0;
+		}
+		if(!(isdigit(s[i]))){
+			return 0;
+		}
 		i++;
 	}
 }
-
+//skip a line.
+void next_line(FILE *fd){
+	while(fgetc(fd) != '\n');
+}
 void main_check(char s[]){
 	FILE *fd = fopen(s,"r");
 	fpos_t pos;
-	char p[81];
-	char **p2;
-	char *p3;
+	char c;
+	char *p;
 	int line_num = 1;
-	int i = 0,j = 0;
 	if(fd == NULL){
-		printf("ERROR - can't open the file - ");
-		printf("%s\n",s);
+		printf("ERROR - can't open the file - %s\n",s);
 		exit(0);
 	}
 	while(!feof(fd)){
 		while(!feof(fd)){
-			re_array(p,p2);
+			p = malloc(81);
 			fgetpos(fd,&pos);
 			if(fgetc(fd) == ';'){
-				read_line(fd,p);
+				next_line(fd);
 				line_num++;
+				fgetpos(fd,&pos);
 				break;
 			}
 			fsetpos(fd,&pos);
-			read_line(fd,p);
-			line_num++;
-			while(p[i] != '\n'){
-				while(p[i] != '\n',' '){
-					p3 = bilt_array(p,i);
-					p2[j] = p3;
-					j++;
-				}
+			while((c = fgetc(fd)) == ' ' || c =='\t' && (!feof(fd)));
+			if (c == '\n')
+			{
+				line_num++;
+				break;
 			}
-			
-		}	
-	}	
+			if((!feof(fd))){
+				return;
+			}
+			fsetpos(fd,&pos);
+			read_line(fd,p);
+			//לשלוח לפונקציה מקובץ אחר לא לשכוח לשלוח את מספר השורה.
+			int a = main_line(p,line_num,0,0);
+			if (!(a))
+			{
+				printf("ERROR - LINE NUMBER : %d - NO INSTRUCTUON OR COMAND FOUND\n",line_num);
+			}
+			free(p);
+			line_num++;
+		}
+	}
 	fclose(fd);
 }
 int main(){
 	main_check("ps.as");
+	printf("finish\n");
 }
