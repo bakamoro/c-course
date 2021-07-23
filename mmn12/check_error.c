@@ -56,13 +56,10 @@ void main_check(char s[]){
 			}
 			fsetpos(fd,&pos);
 			while((c = fgetc(fd)) == ' ' || c =='\t' && (!feof(fd)));
-			if (c == '\n')
+			if (c == '\n' || feof(fd))
 			{
 				line_num++;
 				break;
-			}
-			if((!feof(fd))){
-				return;
 			}
 			fsetpos(fd,&pos);
 			read_line(fd,p);
