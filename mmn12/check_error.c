@@ -4,6 +4,7 @@
 #include <string.h>
 #include "hash_table.h"
 #include "line_handler.h"
+#define MAX_LINE_SIZE  81
 
 //make a line from array of chasrs
 void read_line(FILE *fd,char p[81]){
@@ -46,7 +47,7 @@ void main_check(char s[]){
 	}
 	while(!feof(fd)){
 		while(!feof(fd)){
-			p = malloc(81);
+			p = malloc(MAX_LINE_SIZE);
 			fgetpos(fd,&pos);
 			if(fgetc(fd) == ';'){
 				next_line(fd);
