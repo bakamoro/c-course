@@ -44,13 +44,15 @@ comand_I bilt_comand_I(char s[],int num_of_op,int hoarder,int im,int label){
 	return temp;
 }
 comand_I * bilt_array_I(char * s[]){
-	int i = 0,num_of_op = 3,hoarder = 2,im =1;
+	int i = 0,num_of_op = 3,hoarder = 2,im =1,label = 0;
 	static comand_I arr_comand_I [15];
 	while(i<15){
 		if(i == 6){
-			
+			im = 0;
+			label = 1;
 		}
-		arr_comand_I[i] = bilt_comand_I(s[i],num_of_op,hoarder,im,);
+		if()
+		arr_comand_I[i] = bilt_comand_I(s[i],num_of_op,hoarder,im,label);
 		i++;
 	}
 	return arr_comand_I;
