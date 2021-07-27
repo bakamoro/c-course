@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include "read_word.h"
+#include "read.h"
 #include "label_handler.h"
+#include "parameters_hundler.h"
 #define MAX_WORD_SIZE  81
+extern int index_lable;
 int in_comands_R(char word[]){
     int i = 0,j = 0;
     char * comands_R[8] = {"add","sub","and","or","nor","move","mvhi","mvlo"};
@@ -51,7 +53,7 @@ int in_comands_J(char word[]){
 int in_instructions_1(char word[]){
     int i = 0,j = 0;
     char * instructions[5] = {".dd",".dw",".db",".dh",".asciz"};
-    while(i < 7){
+    while(i < 5){
         while(j < MAX_WORD_SIZE && word[j] == instructions[i][j] && word[j] != '\0' && word[j] != '\n'){
             j++;
             if ('\0' == word[j])
@@ -66,8 +68,8 @@ int in_instructions_1(char word[]){
 int in_instructions_2(char word[]){
     int i = 0,j = 0;
     char * instructions[2] = {".entry",".extern"};
-    while(i < 7){
-        while(j < MAX_WORD_SIZE && word[j] == instructions[i][j] && word[j] != '\0' && word[j] != '\n'){
+    while(i < 2){
+        while(j < MAX_WORD_SIZE && instructions[i][j] != '\0' && word[j] == instructions[i][j] && word[j] != '\0' && word[j] != '\n'){
             j++;
             if ('\0' == word[j])
             {
@@ -79,66 +81,43 @@ int in_instructions_2(char word[]){
     return 0;
 }
 
-int main_line(char *line,int line_num,int index,int a){
+int main_line(char *line,char *label,int line_num,int index,int a){
     char word[MAX_WORD_SIZE];
     if(index > 0 && a == 2){
         return 0;
     }
+    if (a == 1)
+    {
+        if(!search_lable(label,line_num)){
+            add_lable(label,'n',index_lable,line_num);
+        }
+    }
     index = bilt_array(line,word,index);
     if(in_comands_R(word)){
-        if (a == 1)
-        {
-            if(!search_lable(word)){
-                add_lable(word,'n',index_lable,line_num);
-                index_lable++;
-            }
-        }
+
         //לשלוח לפונקציה שתאמת מספר אופרנדים וסוג
         
         return 1;
     }
     else if (in_comands_I(word)){
-       if (a == 1)
-        {
-            if(!search_lable(word)){
-                add_lable(word,'n',index_lable,line_num);
-                index_lable++;
-            }
-        }
+       
+        
 
         return 1;
     }
     else if (in_comands_J(word)){
-        if (a == 1)
-        {
-            if(!search_lable(word)){
-                add_lable(word,'n',index_lable,line_num);
-                index_lable++;
-            }
-        }
+        
 
         return 1;
     }
     else if (in_instructions_1(word)){
-        if (a == 1)
-        {
-            if(!search_lable(word)){
-                add_lable(word,'n',index_lable,line_num);
-                index_lable++;
-            }
-        }
+        
+
         return 1;
     }
     else if (in_instructions_2(word)){
-        if (a == 1)
-        {
-            if(!search_lable(word)){
-                add_lable(word,'n',index_lable,line_num);
-                index_lable++;
-            }
-        }
-        
+        instructions_2(line,word,line_num,index);
         return 1;
     }
-    else main_line(line,line_num,index,(++a));
+    else return main_line(line,word,line_num,index,(++a));
 }
