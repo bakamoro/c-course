@@ -13,7 +13,7 @@ void instructions_2(char line[81],char instruction[],int line_num,int index){
             printf("ERROR - LINE : %d - TO MANY PARAMETERS\n",line_num);
             return;
         }
-        if(legal_label(instruction,line_num)){
+        if(legal_label(label,line_num,'n')){
             if((i = search_lable(label,line_num))){
                 lable_table[i].called = 'y';
                 if(instruction == ".extern"){
