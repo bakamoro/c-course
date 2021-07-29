@@ -93,6 +93,6 @@ void main_check(char s[]){
 	fclose(fd);
 }
 int main(){
-	main_check("Source.as");
+	main_check("ps.as");
 	printf("finish\n");
 }

@@ -76,9 +76,8 @@ int main_line(char *line,char *label,int line_num,int index,int a){
     }
     index = bilt_array(line,word,index);
     if(in_comands_R(word)){
-
         //לשלוח לפונקציה שתאמת מספר אופרנדים וסוג
-        
+        incomand_R(line,word,line_num,index);
         return 1;
     }
     else if (in_comands_I(word)){

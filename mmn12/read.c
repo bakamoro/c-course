@@ -4,6 +4,7 @@
 #include <ctype.h>
 #define MAX_LINE_SIZE 81
 #define MAX_WORD_SIZE 81
+//check if the rest of the line is not empty.
 int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	while(line[index] == ' ' || line[index] == '\t'){
         index++;
@@ -13,21 +14,26 @@ int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	}
 	return 1;
 }
-int operand_chack(char * op,int line_num){
+//check if the hourder id liggle;
+int operand_chack(char op[4],int line_num){
 	int i = 1;
+    if(strlen(op) < 2 || op[1] == '\n'){
+        printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
+		return 0;
+    }
     if(op[0] != '$'){
-		printf("ERROR LINE : %d - ILLEGLE HOARDER",line_num);
+		printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
 		return 0;
 	}
     while(i < strlen(op) && op[i] != ' ' && op[i] != '\t' && op[i] != '\n'){
         if(!isdigit(op[i])){
-            printf("ERROR LINE : %d - ILLEGLE HOARDER",line_num);
+            printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
 		    return 0;
         }
         i++;
     }
 	if(atoi((op+1)) > 31){
-		printf("ERROR LINE : %d - ILLEGLE HOARDER",line_num);
+		printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
 		return 0;
 	}
 	return 1;

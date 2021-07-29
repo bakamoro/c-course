@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct comand_R {
+typedef struct struct_comand_R {
 	char *name;
 	int num_of_op;
 }comand_R;
+
+comand_R arr_comand_R[8];
 
 typedef struct comand_I {
         char *name;
@@ -27,11 +29,12 @@ comand_R bilt_comand_R(char s[],int a){
 comand_R * bilt_array_R(char * s[]){
 	int i = 0,a = 3;
 	static comand_R arr_comand_R [8];
-	while(i<strlen(*s)){
+	while(i<8){
 		arr_comand_R[i] = bilt_comand_R(s[i],a);
 		i++;
-		if (i == 4)
+		if (i == 4){
 			a = 2;
+		}
 	}
 	return arr_comand_R;
 }
@@ -43,6 +46,7 @@ comand_I bilt_comand_I(char s[],int num_of_op,int hoarder,int im,int label){
 	temp.hoarder = hoarder;
 	return temp;
 }
+/*
 comand_I * bilt_array_I(char * s[]){
 	int i = 0,num_of_op = 3,hoarder = 2,im =1,label = 0;
 	static comand_I arr_comand_I [15];
@@ -57,6 +61,7 @@ comand_I * bilt_array_I(char * s[]){
 	}
 	return arr_comand_I;
 }
+*/
 comand_J * bilt_array_I(char * s[]){
 	int i = 0;
 	static comand_J arr_comand_J[4];
@@ -64,12 +69,12 @@ comand_J * bilt_array_I(char * s[]){
 
 	}
 }
-int main_hash(char * word)
+int main_hash()
 {
-	char * comands_R[8] = {"add","sub","and","or","nor","move","mvhi","mvlo"};
+	
 	char * comands_I[15] = {"addi","subi","andi","ori","nori","bne","beq","blt","bgt","lb","sb","lw","sw","lh","sh"};
 	char * comands_J[4] = {"jmp","la","call","stop"};
-	comand_R * arr_comand_R = bilt_array_R(comands_R);
-	comand_I * arr_comand_I = bilt_array_I(comands_I);
+	
+	//comand_I * arr_comand_I = bilt_array_I(comands_I);
 	
 }
