@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "read.h"
 #define MAX_LABLE_SIZE 31
 int index_lable = 0;
 typedef struct lablea
@@ -20,7 +21,14 @@ int legal_label(char *name,int line_num,char start_line){
         printf("ERROR - line : %d - illegal label not start with a letter : %s\n",line_num,name);
         return 0;
     }
-    if(strlen(name) > MAX_LABLE_SIZE){
+    if(start_line == 'y'){
+        if(strlen(name)-1 > MAX_LABLE_SIZE){
+            printf("ERROR - line : %d - illegal label : to many letters : %s\n",line_num,name);
+            return 0;
+        }
+    }
+
+    else if(strlen(name) > MAX_LABLE_SIZE){
         printf("ERROR - line : %d - illegal label : to many letters : %s\n",line_num,name);
         return 0;
     }
@@ -43,22 +51,12 @@ int legal_label(char *name,int line_num,char start_line){
     }
     return 1;
 }
-int comper_lable(char *label1,char *label2){
-    int i = 0;
-    while(label1[i] == label2[i] && label2[i] != '\n' && label1[i] != '\n' && label1[i] != '\0' && label2[i] != '\0'){
-        i++;
-    }
-    if ((label2[i] == '\n' || label2[i] == '\0') && (label1[i] == '\n' || label1[i] == '\0'))
-    {
-        return 1;
-    }
-    return 0;
-}
+
 int search_lable(char name[],int line_num,char called){
     int i = 0;
     while (i < index_lable)
     {
-        if(comper_lable(name,lable_table[i].name)){
+        if(comper_words(name,lable_table[i].name)){
             lable_table->line = realloc(lable_table->line,sizeof(int));
             lable_table->line[lable_table->line_size] =  line_num;
             lable_table->line_size++;
@@ -79,7 +77,7 @@ void add_lable(char *name,char called,int index,int line_num){
     static lable temp;
     name[strlen(name)-1] = '\0';
     temp.line = malloc(sizeof(int));
-    temp.line[index_lable] = line_num;
+    temp.line[0] = line_num;
     temp.line_size = 1;
     strcpy(temp.name,name);
     temp.called = called;

@@ -83,8 +83,8 @@ void main_check(char s[]){
 	while(i < index_lable){
 		if(lable_table[i].called == 'n'){
 			j = 0;
-			while(j < lable_table->line_size){
-				printf("ERROR - LINE : %d - UNDIFIND LABLE - %s\n",lable_table->line[j],lable_table->name);
+			while(j < lable_table[i].line_size){
+				printf("ERROR - LINE : %d - UNDIFIND LABLE - %s\n",lable_table[i].line[j],lable_table[i].name);
 				j++;
 			}
 		}
@@ -93,6 +93,6 @@ void main_check(char s[]){
 	fclose(fd);
 }
 int main(){
-	main_check("ps.as");
+	main_check("Source.as");
 	printf("finish\n");
 }

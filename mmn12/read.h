@@ -9,5 +9,5 @@
 int bilt_array(char p[],char p3[],int i);
 int check_rest_of_line(char line[MAX_LINE_SIZE],int index);
 int operand_chack(char * op,int line_num);
-int operand_chack(char * op,int line_num);
+int comper_words(char *label1,char *label2);
 #endif

@@ -32,6 +32,17 @@ int operand_chack(char * op,int line_num){
 	}
 	return 1;
 }
+int comper_words(char *label1,char *label2){
+    int i = 0;
+    while(label1[i] == label2[i] && label2[i] != '\n' && label1[i] != '\n' && label1[i] != '\0' && label2[i] != '\0'){
+        i++;
+    }
+    if ((label2[i] == '\n' || label2[i] == '\0') && (label1[i] == '\n' || label1[i] == '\0'))
+    {
+        return 1;
+    }
+    return 0;
+}
 //make a word from array of chasrs.
 int bilt_array(char p[],char p3[],int i){
 	int j = 0;
@@ -47,5 +58,6 @@ int bilt_array(char p[],char p3[],int i){
 	{
 		p3[j] = p[i];
 	}
+    else p3[j] = '\0';
 	return i;
 }
