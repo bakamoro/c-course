@@ -13,42 +13,59 @@ typedef struct lablea
     int line_size;
 }lable;
 lable * lable_table;
-int legal_label(char *name,int line_num){
-    int i = 0,j = 0;
+int legal_label(char *name,int line_num,char start_line){
+    int i = 1;
     if ((name[0] < 65 || name[0] > 122) || (name[0] > 90 && name[0] < 97))
     {
-        printf("ERROR - line : %d - illegal label\n",line_num);
+        printf("ERROR - line : %d - illegal label not start with a letter : %s\n",line_num,name);
         return 0;
     }
     if(strlen(name) > MAX_LABLE_SIZE){
-        printf("ERROR - line : %d - illegal label\n",line_num);
+        printf("ERROR - line : %d - illegal label : to many letters : %s\n",line_num,name);
         return 0;
     }
     while(i<strlen(name)){
-        if(!isdigit(name[i]) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
-            printf("ERROR - line : %d - illegal label\n",line_num);
+        if((!isdigit(name[i])) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
+            printf("ERROR - line : %d - illegal label : %s\n",line_num,name);
             return 0;
+        }
+        if(name[i] != '\0' && name[i] != '\n'){
+            return 1;
         }
         i++;
     }
-    if (name[strlen(name)-1] != ':')
-    {
-        printf("ERROR - line : %d - illegal label",line_num);
-        return 0;
+    if(start_line == 'y'){
+        if (name[strlen(name)-1] != ':')
+        {
+            printf("ERROR - line : %d - illegal label : %s\n",line_num,name);
+            return 0;
+        }
     }
-    
     return 1;
 }
-int search_lable(char name[],int line_num){
+int comper_lable(char *label1,char *label2){
+    int i = 0;
+    while(label1[i] == label2[i] && label2[i] != '\n' && label1[i] != '\n' && label1[i] != '\0' && label2[i] != '\0'){
+        i++;
+    }
+    if ((label2[i] == '\n' || label2[i] == '\0') && (label1[i] == '\n' || label1[i] == '\0'))
+    {
+        return 1;
+    }
+    return 0;
+}
+int search_lable(char name[],int line_num,char called){
     int i = 0;
     while (i < index_lable)
     {
-        if(name == lable_table[i].name){
+        if(comper_lable(name,lable_table[i].name)){
             lable_table->line = realloc(lable_table->line,sizeof(int));
             lable_table->line[lable_table->line_size] =  line_num;
             lable_table->line_size++;
+            lable_table->called = called;
             return i;
         }
+        i++;
     }
     return 0;
 }
@@ -57,7 +74,7 @@ void add_lable(char *name,char called,int index,int line_num){
        lable_table = malloc(sizeof(lable)); 
     }
     else {
-        lable_table = realloc(lable_table,sizeof(lable));
+        lable_table = reallocarray(lable_table,sizeof(lable),index_lable+1);
     }
     static lable temp;
     name[strlen(name)-1] = '\0';

@@ -16,7 +16,8 @@ void read_line(FILE *fd,char p[81]){
             i++;
             c = fgetc(fd);
         }
-	p[i] = c;
+	p[i] = '\n';
+
 }
 //check if the string is liglle number.
 int number_check(char s[],int line_number){

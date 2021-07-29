@@ -11,7 +11,7 @@ typedef struct lablea
     int line_size;
 }lable;
 lable * lable_table;
-int legal_label(char *name,int line_num);
+int legal_label(char *name,int line_num,char start_line);
 int search_lable(char name[],int);
 void add_lable(char *name,char called,int index,int line_num);
 #endif
