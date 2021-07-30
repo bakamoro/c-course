@@ -19,20 +19,6 @@ void read_line(FILE *fd,char p[81]){
 	p[i] = '\n';
 
 }
-//check if the string is liglle number.
-int number_check(char s[],int line_number){
-	int i = 0;
-	while(i < strlen(s)){
-		if(s[i] == '.'){
-			printf("ERROR - line : %c - the asembler does not support decimal numbers\n",line_number);
-			return 0;
-		}
-		if(!(isdigit(s[i]))){
-			return 0;
-		}
-		i++;
-	}
-}
 //skip a line.
 void next_line(FILE *fd){
 	while(fgetc(fd) != '\n');

@@ -4,6 +4,31 @@
 #include <ctype.h>
 #define MAX_LINE_SIZE 81
 #define MAX_WORD_SIZE 81
+
+//check if the string is liglle number.
+int number_check(char s[],int line_number){
+	int i = 0;
+	while(i < strlen(s)){
+		if(s[i] == '.'){
+			printf("ERROR - line : %d - the asembler does not support decimal numbers\n",line_number);
+			return 0;
+		}
+		if(!(isdigit(s[i]))){
+			return 0;
+        }
+		i++;
+	}
+    if(atoi(s) > 32767){
+        printf("EOOR - line : %d - number too big - %s",line_number,s);
+        return 0;
+    }
+    if(atoi(s) < 32767){
+        printf("EOOR - line : %d - number too small - %s",line_number,s);
+        return 0;
+    }
+    return 1;
+}
+
 //check if the rest of the line is not empty.
 int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	while(line[index] == ' ' || line[index] == '\t'){
@@ -34,6 +59,25 @@ int operand_chack(char op[4],int line_num){
     }
 	if(atoi((op+1)) > 31){
 		printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
+		return 0;
+	}
+	return 1;
+}
+int operand_chack_binnar(char op[4]){
+	int i = 1;
+    if(strlen(op) < 2 || op[1] == '\n'){
+		return 0;
+    }
+    if(op[0] != '$'){
+		return 0;
+	}
+    while(i < strlen(op) && op[i] != ' ' && op[i] != '\t' && op[i] != '\n'){
+        if(!isdigit(op[i])){
+		    return 0;
+        }
+        i++;
+    }
+	if(atoi((op+1)) > 31){
 		return 0;
 	}
 	return 1;

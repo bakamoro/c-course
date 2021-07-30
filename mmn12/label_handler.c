@@ -51,16 +51,36 @@ int legal_label(char *name,int line_num,char start_line){
     }
     return 1;
 }
-
+int legal_label_binar(char *name){
+    int i = 1;
+    if ((name[0] < 65 || name[0] > 122) || (name[0] > 90 && name[0] < 97))
+    {
+        return 0;
+    }
+    else if(strlen(name) > MAX_LABLE_SIZE){
+        return 0;
+    }
+    while(i<strlen(name)){
+        if((!isdigit(name[i])) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
+            return 0;
+        }
+        if(name[i] != '\0' && name[i] != '\n'){
+            return 1;
+        }
+        i++;
+    }
+    return 1;
+}
 int search_lable(char name[],int line_num,char called){
     int i = 0;
     while (i < index_lable)
     {
         if(comper_words(name,lable_table[i].name)){
-            lable_table->line = realloc(lable_table->line,sizeof(int));
-            lable_table->line[lable_table->line_size] =  line_num;
-            lable_table->line_size++;
-            lable_table->called = called;
+            lable_table[i].line = realloc(lable_table->line,sizeof(int));
+            lable_table[i].line[lable_table->line_size] =  line_num;
+            lable_table[i].line_size++;
+            if(lable_table[i].called != 'y')
+                lable_table[i].called = called;
             return i;
         }
         i++;

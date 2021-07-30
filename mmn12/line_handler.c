@@ -68,7 +68,7 @@ int main_line(char *line,char *label,int line_num,int index,int a){
     }
     if (a == 1)
     {
-        if(!search_lable(label,line_num)){
+        if(!search_lable(label,line_num,'n')){
             if(legal_label(label,line_num,'y')){
                 add_lable(label,'n',index_lable,line_num);
             }
@@ -81,8 +81,7 @@ int main_line(char *line,char *label,int line_num,int index,int a){
         return 1;
     }
     else if (in_comands_I(word)){
-       
-        
+        incomand_I(line,word,line_num,index);
         return 1;
     }
     else if (in_comands_J(word)){
