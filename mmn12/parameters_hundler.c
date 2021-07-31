@@ -15,7 +15,7 @@ int instructions_2(char line[81],char instruction[],int line_num,int index){
             return 1;
         }
         if(legal_label(label,line_num,'n')){
-            if((i = search_lable(label,line_num,'y'))){
+            if((i =  search_lable(label,line_num))){
                 if(instruction == ".extern"){
                     lable_table[i].ex = 'y';
                 }
@@ -29,7 +29,7 @@ int instructions_2(char line[81],char instruction[],int line_num,int index){
         return 1;
     }
 }
-void instructions_1(char word[]){
+int instructions_1(char word[]){
 
 }
 //
@@ -74,23 +74,22 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
     comand_I temp_comand;
     while(check_rest_of_line(line,index) && num_of_op < 4){
         index = bilt_array(line,operand,index);
-        if(operand[0] == '$'){
-            if(operand_chack(operand,line_num)){
-                if (i == 0){
-                    i_0 = 'h';
-                    strcpy(op_0,operand);
-                }
-                if(i == 1){
-                    i_1 = 'h';
-                    strcpy(op_1,operand);
-                }
-                if(i == 2){
-                    i_2 = 'h';
-                    strcpy(op_2,operand);
-                }
+        if(operand[i] == '$'){
+            if (i == 0){
+                i_0 = 'h';
+                strcpy(op_0,operand);
             }
+            if(i == 1){
+                i_1 = 'h';
+                strcpy(op_1,operand);
+            }
+            if(i == 2){
+                i_2 = 'h';
+                strcpy(op_2,operand);
+            }
+            operand_chack(operand,line_num);
         }
-        else if(isdigit(operand[0])){
+        else if(isdigit(operand[i])){
                 if (i == 0){
                     i_0 = 'n';
                     strcpy(op_0,operand);
@@ -119,7 +118,9 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
                 strcpy(op_2,operand);
             }
             if(legal_label(operand,line_num,'n')){
-                search_lable(operand,line_num,'n');
+                if(!search_lable(operand,line_num)){
+                    add_lable(operand,'n',index,line_num);
+                }
             }
         }
         num_of_op++;
@@ -147,6 +148,72 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
     }
     if(i_2 != arr_comand_I[i].operands_type[2]){
         printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c\n",line_num,op_2,i_2,arr_comand_I[i].operands_type[2]);
+        return 1;
+    }
+    return 0;
+}
+int incomand_J(char line[81],char comand_name[],int line_num,int index){
+    char * comands_J[4] = {"jmp","la","call","stop"};
+    comand_J * arr_comand_j = bilt_array_J(comands_J);
+    char operand[MAX_LABLE_SIZE],op_1[MAX_LABLE_SIZE],op_2[MAX_LABLE_SIZE];
+    int i = 0,num_of_op = 0;
+    char type_1 = 'N',type_2 = 'N';
+    while(check_rest_of_line(line,index) && num_of_op < 2){
+        index = bilt_array(line,operand,index);
+        if(operand[0] == '$'){
+            if(i == 0){
+                type_1 = 'h';
+            }
+            if(i == 1){
+                type_2 = 'h';
+            }
+        }
+        else if(isdigit(operand[i])){
+            if(i == 0){
+                type_1 = 'n';
+            }
+            if(i == 1){
+                type_2 = 'n';
+            }
+        }
+        else{
+            if(i == 0){
+                type_1 = 'l';
+            }
+            if(i == 1){
+                type_2 = 'l';
+            }
+            if(legal_label(operand,line_num,'n')){
+                if(!search_lable(operand,line_num)){
+                    add_lable(operand,'n',index,line_num);
+                }
+            }
+        }
+        if(i == 0){
+            strcpy(op_1,operand);
+        }
+        if(i == 1){
+            strcpy(op_2,operand);
+        }
+        num_of_op++;
+        i++;
+    }
+    if(num_of_op == 3){
+        printf("ERROR - line : %d - to many parameters\n",line_num);
+        return 1;
+    }
+    i = 0;
+    while(!comper_words(comand_name,arr_comand_j[i].name))i++;
+    if(arr_comand_j[i].num_of_op > num_of_op){
+        printf("ERROR - line : %d - too few parameters\n",line_num);
+        return 1;
+    }
+    if(type_1 != arr_comand_j[i].type_1){
+        printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c\n",line_num,op_1,type_1,arr_comand_j[i].type_1);
+        return 1;
+    }
+    if(type_2 != arr_comand_j[i].type_2){
+        printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c\n",line_num,op_2,type_2,arr_comand_j[i].type_2);
         return 1;
     }
     return 0;

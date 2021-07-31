@@ -71,7 +71,7 @@ int legal_label_binar(char *name){
     }
     return 1;
 }
-int search_lable(char name[],int line_num,char called){
+int search_lable(char name[],int line_num){
     int i = 0;
     while (i < index_lable)
     {
@@ -79,8 +79,6 @@ int search_lable(char name[],int line_num,char called){
             lable_table[i].line = realloc(lable_table->line,sizeof(int));
             lable_table[i].line[lable_table->line_size] =  line_num;
             lable_table[i].line_size++;
-            if(lable_table[i].called != 'y')
-                lable_table[i].called = called;
             return i;
         }
         i++;

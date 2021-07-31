@@ -13,6 +13,6 @@ typedef struct lablea
 lable * lable_table;
 int legal_label(char *name,int line_num,char start_line);
 int legal_label_binar(char *name);
-int search_lable(char name[],int line_num,char called);
+int search_lable(char name[],int line_num);
 void add_lable(char *name,char called,int index,int line_num);
 #endif
