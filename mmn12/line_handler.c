@@ -40,7 +40,7 @@ int in_comands_J(char word[]){
 }
 int in_instructions_1(char word[]){
     int i = 0,j = 0;
-    char * instructions_1[5] = {".dd",".dw",".db",".dh",".asciz"};
+    char * instructions_1[4] = {".dw",".db",".dh",".asciz"};
     while(i < 5){
         if(comper_words(word,instructions_1[i])){
             return 1;
@@ -85,8 +85,7 @@ int main_line(char *line,char *label,int line_num,int index,int a){
         return 1;
     }
     else if (in_comands_J(word)){
-        
-
+        incomand_J(line,word,line_num,index);
         return 1;
     }
     else if (in_instructions_1(word)){

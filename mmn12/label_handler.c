@@ -32,7 +32,12 @@ int legal_label(char *name,int line_num,char start_line){
         printf("ERROR - line : %d - illegal label : to many letters : %s\n",line_num,name);
         return 0;
     }
-    while(i<strlen(name)){
+    while(i<strlen(name) && name[i] != '\n'){
+        if(start_line == 'y'){
+            if(i == strlen(name)-1){
+                return 1;
+            }
+        }
         if((!isdigit(name[i])) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
             printf("ERROR - line : %d - illegal label : %s\n",line_num,name);
             return 0;

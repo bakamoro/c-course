@@ -28,19 +28,40 @@ int instructions_2(char line[81],char instruction[],int line_num,int index){
         printf("ERROR - LINE : %d - TO FEW PARAMETERS\n ",line_num);
         return 1;
     }
+    return 0;
 }
-int instructions_1(char word[]){
+int instructions_1(char line[81],char comand_name[],int line_num,int index){
+    char asciz[] = ".asciz";
+    char string[MAX_WORD_SIZE-7];
+    char operand[MAX_WORD_SIZE - 3];
+    if(comper_words(comand_name,asciz)){
+        index = bilt_array(line,string,index);
+        if(!string_check(string)){
+            printf("ERROR - line : %d - illegil string\n",line_num);
+            return 1;
+        }
+        return 0;
+    }   
+}
 
-}
-//
 int incomand_R(char line[81],char comand_name[],int line_num,int index){
-    int i = 0;
+    int i = 0 ,need_coma = 0;
     int hoarder_num = 0;
     char ho[4];
     char * comands_R[8] = {"add","sub","and","or","nor","move","mvhi","mvlo"};
     comand_R * arr_comand_R = bilt_array_R(comands_R);
     while(check_rest_of_line(line,index) && hoarder_num < 4){
         index = bilt_array(line,ho,index);
+        if(need_coma){
+            if(ho[0] == ','){
+                index = bilt_array(line,ho,index);
+            }
+            else{
+                printf("ERROR - line : %d - missing comma\n",line_num);
+                return 1;
+            }
+        }
+        else need_coma = 1;
         if(!operand_chack(ho,line_num)){
             return 1;
         }
@@ -70,11 +91,21 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
     char op_1[MAX_LABLE_SIZE],op_2[MAX_LABLE_SIZE],op_0[MAX_LABLE_SIZE];
     char i_0,i_1,i_2;
     int i = 0,j = 0;
-    int num_of_op = 0;
+    int num_of_op = 0 , need_comma = 0;
     comand_I temp_comand;
     while(check_rest_of_line(line,index) && num_of_op < 4){
         index = bilt_array(line,operand,index);
-        if(operand[i] == '$'){
+        if(need_comma){
+            if(operand[0] == ','){
+                index = bilt_array(line,operand,index);
+            }
+            else{
+                printf("ERROR - line : %d - missing comma\n",line_num);
+                return 1;
+            }
+        }
+        else need_comma = 1;
+        if(operand[0] == '$'){
             if (i == 0){
                 i_0 = 'h';
                 strcpy(op_0,operand);
@@ -89,7 +120,7 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
             }
             operand_chack(operand,line_num);
         }
-        else if(isdigit(operand[i])){
+        else if(isdigit(operand[0]) || operand[0] == '+' || operand[0] == '-'){
                 if (i == 0){
                     i_0 = 'n';
                     strcpy(op_0,operand);
@@ -156,32 +187,33 @@ int incomand_J(char line[81],char comand_name[],int line_num,int index){
     char * comands_J[4] = {"jmp","la","call","stop"};
     comand_J * arr_comand_j = bilt_array_J(comands_J);
     char operand[MAX_LABLE_SIZE],op_1[MAX_LABLE_SIZE],op_2[MAX_LABLE_SIZE];
-    int i = 0,num_of_op = 0;
-    char type_1 = 'N',type_2 = 'N';
+    int i = 0,num_of_op = 0,need_comma = 0;
+    char type = 'N';
     while(check_rest_of_line(line,index) && num_of_op < 2){
         index = bilt_array(line,operand,index);
+        if(need_comma){
+            if(operand[0] == ','){
+                index = bilt_array(line,operand,index);
+            }
+            else{
+                printf("ERROR - line : %d - missing comma\n",line_num);
+                return 1;
+            }
+        }
+        else need_comma = 1;
         if(operand[0] == '$'){
             if(i == 0){
-                type_1 = 'h';
-            }
-            if(i == 1){
-                type_2 = 'h';
+                type = 'r';
             }
         }
         else if(isdigit(operand[i])){
             if(i == 0){
-                type_1 = 'n';
-            }
-            if(i == 1){
-                type_2 = 'n';
+                type = 'n';
             }
         }
         else{
             if(i == 0){
-                type_1 = 'l';
-            }
-            if(i == 1){
-                type_2 = 'l';
+                type = 'l';
             }
             if(legal_label(operand,line_num,'n')){
                 if(!search_lable(operand,line_num)){
@@ -192,13 +224,10 @@ int incomand_J(char line[81],char comand_name[],int line_num,int index){
         if(i == 0){
             strcpy(op_1,operand);
         }
-        if(i == 1){
-            strcpy(op_2,operand);
-        }
         num_of_op++;
         i++;
     }
-    if(num_of_op == 3){
+    if(num_of_op == 2){
         printf("ERROR - line : %d - to many parameters\n",line_num);
         return 1;
     }
@@ -208,12 +237,11 @@ int incomand_J(char line[81],char comand_name[],int line_num,int index){
         printf("ERROR - line : %d - too few parameters\n",line_num);
         return 1;
     }
-    if(type_1 != arr_comand_j[i].type_1){
-        printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c\n",line_num,op_1,type_1,arr_comand_j[i].type_1);
-        return 1;
-    }
-    if(type_2 != arr_comand_j[i].type_2){
-        printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c\n",line_num,op_2,type_2,arr_comand_j[i].type_2);
+    if(type != arr_comand_j[i].type_1 && type != arr_comand_j[i].type_2){
+        if(arr_comand_j[i].type_2 != 'N'){
+            printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c / %c\n",line_num,op_1,type,arr_comand_j[i].type_1,arr_comand_j[i].type_2);
+        }
+        else printf("ERROR - line : %d - word is : %s - type is - %c , type suppose to be - %c \n",line_num,op_1,type,arr_comand_j[i].type_1);
         return 1;
     }
     return 0;

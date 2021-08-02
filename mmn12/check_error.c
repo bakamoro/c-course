@@ -21,7 +21,7 @@ void read_line(FILE *fd,char p[81]){
 }
 //skip a line.
 void next_line(FILE *fd){
-	while(fgetc(fd) != '\n');
+	while(!feof(fd) && fgetc(fd) != '\n');
 }
 void main_check(char s[]){
 	FILE *fd = fopen(s,"r");
@@ -38,14 +38,12 @@ void main_check(char s[]){
 		while(!feof(fd)){
 			p = malloc(MAX_LINE_SIZE);
 			fgetpos(fd,&pos);
-			if(fgetc(fd) == ';'){
-				next_line(fd);
+			while((c = fgetc(fd)) == ' ' || c =='\t' && (!feof(fd)));
+			if(c == ';'){
 				line_num++;
-				fgetpos(fd,&pos);
+				next_line(fd);
 				break;
 			}
-			fsetpos(fd,&pos);
-			while((c = fgetc(fd)) == ' ' || c =='\t' && (!feof(fd)));
 			if (c == '\n' || feof(fd))
 			{
 				line_num++;

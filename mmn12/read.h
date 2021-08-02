@@ -12,4 +12,5 @@ int check_rest_of_line(char line[MAX_LINE_SIZE],int index);
 int operand_chack(char * op,int line_num);
 int comper_words(char *label1,char *label2);
 int operand_chack_binnar(char op[4]);
+int string_check(char *string);
 #endif
