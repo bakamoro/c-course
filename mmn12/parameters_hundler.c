@@ -3,7 +3,6 @@
 #include "label_handler.h"
 #include "hash_table.h"
 int instructions_2(char line[81],char instruction[],int line_num,int index){
-    int error = 0;
     char label[MAX_LABLE_SIZE];
     int num_of_pa = 0;
     int i = 0;
@@ -16,7 +15,7 @@ int instructions_2(char line[81],char instruction[],int line_num,int index){
         }
         if(legal_label(label,line_num,'n')){
             if((i =  search_lable(label,line_num))){
-                if(instruction == ".extern"){
+                if(comper_words(instruction,".extern")){
                     lable_table[i].ex = 'y';
                 }
                 else lable_table[i].ex = 'n';
@@ -33,7 +32,11 @@ int instructions_2(char line[81],char instruction[],int line_num,int index){
 int instructions_1(char line[81],char comand_name[],int line_num,int index){
     char asciz[] = ".asciz";
     char string[MAX_WORD_SIZE-7];
-    char operand[MAX_WORD_SIZE - 3];
+    char operand[16];
+    char * instruction[3] = {".dh",".db",".dw"};
+    int size_db = 8,size_dw = 32,size_dh = 16;
+    int size = 0;
+    int need_coma = 0;
     if(comper_words(comand_name,asciz)){
         index = bilt_array(line,string,index);
         if(!string_check(string)){
@@ -41,7 +44,31 @@ int instructions_1(char line[81],char comand_name[],int line_num,int index){
             return 1;
         }
         return 0;
-    }   
+    }
+    if(comper_words(comand_name,instruction[0])){
+        size = size_dh;
+    }
+    if(comper_words(comand_name,instruction[1])){
+        size = size_db;
+    }
+    if(comper_words(comand_name,instruction[2])){
+        size = size_dw;
+    }
+    while(check_rest_of_line(line,index)){
+        index = bilt_array(line,operand,index);
+        if(need_coma){
+            if(operand[0] == ','){
+                index = bilt_array(line,operand,index);
+            }
+            else{
+                printf("ERROR - line : %d - missing comma\n",line_num);
+                return 1;
+            }
+        }
+        else need_coma = 1;
+        number_check(operand,line_num,size);
+    }
+    return 0;
 }
 
 int incomand_R(char line[81],char comand_name[],int line_num,int index){
@@ -90,9 +117,8 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
     char operand[MAX_LABLE_SIZE];
     char op_1[MAX_LABLE_SIZE],op_2[MAX_LABLE_SIZE],op_0[MAX_LABLE_SIZE];
     char i_0,i_1,i_2;
-    int i = 0,j = 0;
+    int i = 0;
     int num_of_op = 0 , need_comma = 0;
-    comand_I temp_comand;
     while(check_rest_of_line(line,index) && num_of_op < 4){
         index = bilt_array(line,operand,index);
         if(need_comma){
@@ -133,7 +159,7 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
                     i_2 = 'n';
                     strcpy(op_2,operand);
                 }
-                number_check(operand,line_num);
+                number_check(operand,line_num,16);
            }
         else {
             if (i == 0){
@@ -186,7 +212,7 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
 int incomand_J(char line[81],char comand_name[],int line_num,int index){
     char * comands_J[4] = {"jmp","la","call","stop"};
     comand_J * arr_comand_j = bilt_array_J(comands_J);
-    char operand[MAX_LABLE_SIZE],op_1[MAX_LABLE_SIZE],op_2[MAX_LABLE_SIZE];
+    char operand[MAX_LABLE_SIZE],op_1[MAX_LABLE_SIZE];
     int i = 0,num_of_op = 0,need_comma = 0;
     char type = 'N';
     while(check_rest_of_line(line,index) && num_of_op < 2){

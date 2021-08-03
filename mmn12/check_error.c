@@ -38,7 +38,7 @@ void main_check(char s[]){
 		while(!feof(fd)){
 			p = malloc(MAX_LINE_SIZE);
 			fgetpos(fd,&pos);
-			while((c = fgetc(fd)) == ' ' || c =='\t' && (!feof(fd)));
+			while(((c = fgetc(fd)) == ' ' || c =='\t') && (!feof(fd)));
 			if(c == ';'){
 				line_num++;
 				next_line(fd);

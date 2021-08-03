@@ -84,7 +84,9 @@ int search_lable(char name[],int line_num){
             lable_table[i].line = realloc(lable_table->line,sizeof(int));
             lable_table[i].line[lable_table->line_size] =  line_num;
             lable_table[i].line_size++;
-            return i;
+            if(i)
+                return i;
+            return 1;
         }
         i++;
     }

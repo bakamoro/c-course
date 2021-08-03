@@ -5,9 +5,19 @@
 #define MAX_LINE_SIZE 81
 #define MAX_WORD_SIZE 81
 
+double power(int num,double po){
+	int i = 1;
+	double sum = 1;
+	while (i < po)
+	{
+		sum *= num;
+		i++;
+	}
+	return sum;
+}
 //check if the string is liglle number.
 //הודק האם המספר שלם ועשוי כולו מספרות ויכול להיכנס ל -16 סיביות בשיטת המשלים. 
-int number_check(char s[],int line_number){
+int number_check(char s[],int line_number,int bit){
 	int i = 0;
 	while(i < strlen(s)){
 		if(s[i] == '.'){
@@ -19,32 +29,16 @@ int number_check(char s[],int line_number){
         }
 		i++;
 	}
-    if(atoi(s) > 32767){
+    if(atoi(s) > power(2,bit)){
         printf("ERROR - line : %d - number too big - %s\n",line_number,s);
         return 0;
     }
-    if(atoi(s) < -32767){
+    if(atoi(s) < -1*(power(2,bit))){
         printf("EORROR - line : %d - number too small - %s\n",line_number,s);
         return 0;
     }
     return 1;
 }
-//בודק האם המספר שלם ועשוי כולו מספרות.
-int number_check_2(char s[],int line_number){
-	int i = 0;
-	while(i < strlen(s)){
-		if(s[i] == '.'){
-			printf("ERROR - line : %d - the asembler does not support decimal numbers\n",line_number);
-			return 0;
-		}
-		if(!(isdigit(s[i]))){
-			return 0;
-        }
-		i++;
-	}
-    return 1;
-}
-
 //check if the rest of the line is not empty.
 int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	while(line[index] == ' ' || line[index] == '\t'){
@@ -79,29 +73,12 @@ int operand_chack(char op[4],int line_num){
 	}
 	return 1;
 }
-int operand_chack_binnar(char op[4]){
-	int i = 1;
-    if(strlen(op) < 2 || op[1] == '\n'){
-		return 0;
-    }
-    if(op[0] != '$'){
-		return 0;
-	}
-    while(i < strlen(op) && op[i] != ' ' && op[i] != '\t' && op[i] != '\n'){
-        if(!isdigit(op[i])){
-		    return 0;
-        }
-        i++;
-    }
-	if(atoi((op+1)) > 31){
-		return 0;
-	}
-	return 1;
-}
+
 int string_check(char *string){
-	if(string[0] == '"' && string[strlen(string)-1] == '"'){
+	if(string[0] == '"' && string[strlen(string)-1]){
 		return 1;
 	}
+	return 0;
 }
 int comper_words(char *label1,char *label2){
     int i = 0;
@@ -117,9 +94,16 @@ int comper_words(char *label1,char *label2){
 //make a word from array of chasrs.
 int bilt_array(char p[],char p3[],int i){
 	int j = 0;
-    while(i < MAX_WORD_SIZE && p[i] == ' ' || p[i] == '\n' || p[i] == '\t'){
+    while(i < MAX_WORD_SIZE && (p[i] == ' ' || p[i] == '\n' || p[i] == '\t')){
         i++;
     }
+	if(p[i] == '"'){
+		while(p[i] != '\n' && p[i] != '"'){
+			p3[j] = p[i];
+			i++;
+			j++;
+		}
+	}
 	while(i < MAX_WORD_SIZE && p[i] != ' ' && p[i] != '\n' && p[i] != '\t'){
 		if(p[i] == ','){
 			if(j == 0){
