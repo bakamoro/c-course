@@ -14,22 +14,22 @@ typedef struct lablea
     int line_size;
 }lable;
 lable * lable_table;
-int legal_label(char *name,int line_num,char start_line){
+int legal_label(char *name,char file_name[],int line_num,char start_line){
     int i = 1;
     if ((name[0] < 65 || name[0] > 122) || (name[0] > 90 && name[0] < 97))
     {
-        printf("ERROR - line : %d - illegal label not start with a letter : %s\n",line_num,name);
+        printf("ERROR - file : %s - line : %d - illegal label not start with a letter : %s\n",file_name,line_num,name);
         return 0;
     }
     if(start_line == 'y'){
         if(strlen(name)-1 > MAX_LABLE_SIZE){
-            printf("ERROR - line : %d - illegal label : to many letters : %s\n",line_num,name);
+            printf("ERROR - file : %s - line : %d - illegal label : to many letters : %s\n",file_name,line_num,name);
             return 0;
         }
     }
 
     else if(strlen(name) > MAX_LABLE_SIZE){
-        printf("ERROR - line : %d - illegal label : to many letters : %s\n",line_num,name);
+        printf("ERROR - file : %s - line : %d - illegal label : to many letters : %s\n",file_name,line_num,name);
         return 0;
     }
     while(i<strlen(name) && name[i] != '\n'){
@@ -39,7 +39,7 @@ int legal_label(char *name,int line_num,char start_line){
             }
         }
         if((!isdigit(name[i])) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
-            printf("ERROR - line : %d - illegal label : %s\n",line_num,name);
+            printf("ERROR - file : %s - line : %d - illegal label : %s\n",file_name,line_num,name);
             return 0;
         }
         if(name[i] != '\0' && name[i] != '\n'){
@@ -50,7 +50,7 @@ int legal_label(char *name,int line_num,char start_line){
     if(start_line == 'y'){
         if (name[strlen(name)-1] != ':')
         {
-            printf("ERROR - line : %d - illegal label : %s\n",line_num,name);
+            printf("ERROR - file : %s - line : %d - illegal label : %s\n",file_name,line_num,name);
             return 0;
         }
     }

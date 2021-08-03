@@ -17,11 +17,11 @@ double power(int num,double po){
 }
 //check if the string is liglle number.
 //הודק האם המספר שלם ועשוי כולו מספרות ויכול להיכנס ל -16 סיביות בשיטת המשלים. 
-int number_check(char s[],int line_number,int bit){
+int number_check(char s[],char file_name[],int line_number,int bit){
 	int i = 0;
 	while(i < strlen(s)){
 		if(s[i] == '.'){
-			printf("ERROR - line : %d - the asembler does not support decimal numbers\n",line_number);
+			printf("ERROR - file : %s - line : %d - the asembler does not support decimal numbers\n",file_name,line_number);
 			return 0;
 		}
 		if(!(isdigit(s[i]))){
@@ -30,11 +30,11 @@ int number_check(char s[],int line_number,int bit){
 		i++;
 	}
     if(atoi(s) > power(2,bit)){
-        printf("ERROR - line : %d - number too big - %s\n",line_number,s);
+        printf("ERROR - file : %s - line : %d - number too big - %s\n",file_name,line_number,s);
         return 0;
     }
     if(atoi(s) < -1*(power(2,bit))){
-        printf("EORROR - line : %d - number too small - %s\n",line_number,s);
+        printf("EORROR - file : %s - line : %d - number too small - %s\n",file_name,line_number,s);
         return 0;
     }
     return 1;
@@ -50,25 +50,25 @@ int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	return 1;
 }
 //check if the hourder id liggle;
-int operand_chack(char op[4],int line_num){
+int operand_chack(char op[4],char file_name[],int line_num){
 	int i = 1;
     if(strlen(op) < 2 || op[1] == '\n'){
-        printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
+        printf("ERROR - file : %s - line : %d - ILLEGLE register - %s\n",file_name,line_num,op);
 		return 0;
     }
     if(op[0] != '$'){
-		printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
+		printf("ERROR - file : %s - line : %d - ILLEGLE register - %s\n",file_name,line_num,op);
 		return 0;
 	}
     while(i < strlen(op) && op[i] != ' ' && op[i] != '\t' && op[i] != '\n'){
         if(!isdigit(op[i])){
-            printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
+            printf("ERROR - file : %s - line : %d - ILLEGLE register - %s\n",file_name,line_num,op);
 		    return 0;
         }
         i++;
     }
 	if(atoi((op+1)) > 31 && atoi((op+1)) < 0){
-		printf("ERROR LINE : %d - ILLEGLE HOARDER - %s\n",line_num,op);
+		printf("ERROR - file : %s - line : %d - ILLEGLE register - %s\n",file_name,line_num,op);
 		return 0;
 	}
 	return 1;

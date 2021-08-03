@@ -61,7 +61,7 @@ int in_instructions_2(char word[]){
     return 0;
 }
 
-int main_line(char *line,char *label,int line_num,int index,int a){
+int main_line(char *line,char *label,char file_name[],int line_num,int index,int a){
     char word[MAX_WORD_SIZE];
     if(a == 2){
         return 0;
@@ -72,31 +72,31 @@ int main_line(char *line,char *label,int line_num,int index,int a){
         label[strlen(label)-1] = '\0';
         if(!search_lable(label,'N',line_num)){
             label[strlen(label)] = ':';
-            if(legal_label(label,line_num,'y')){
+            if(legal_label(label,file_name,line_num,'y')){
                 add_lable(label,'N','N',index_lable,line_num);
             }
         }
     }
     if(in_comands_R(word)){
         //לשלוח לפונקציה שתאמת מספר אופרנדים וסוג
-        incomand_R(line,word,line_num,index);
+        incomand_R(line,word,file_name,line_num,index);
         return 1;
     }
     else if (in_comands_I(word)){
-        incomand_I(line,word,line_num,index);
+        incomand_I(line,word,file_name,line_num,index);
         return 1;
     }
     else if (in_comands_J(word)){
-        incomand_J(line,word,line_num,index);
+        incomand_J(line,word,file_name,line_num,index);
         return 1;
     }
     else if (in_instructions_1(word)){
-        instructions_1(line,word,line_num,index);
+        instructions_1(line,word,file_name,line_num,index);
         return 1;
     }
     else if (in_instructions_2(word)){
-        instructions_2(line,word,line_num,index);
+        instructions_2(line,word,file_name,line_num,index);
         return 1;
     }
-    else return main_line(line,word,line_num,index,(++a));
+    else return main_line(line,word,file_name,line_num,index,(++a));
 }
