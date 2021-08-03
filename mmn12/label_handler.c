@@ -9,7 +9,7 @@ typedef struct lablea
 {
     char name[MAX_LABLE_SIZE];
     char called;
-    char ex;
+    char need_called;
     int *line;
     int line_size;
 }lable;
@@ -56,34 +56,18 @@ int legal_label(char *name,int line_num,char start_line){
     }
     return 1;
 }
-int legal_label_binar(char *name){
-    int i = 1;
-    if ((name[0] < 65 || name[0] > 122) || (name[0] > 90 && name[0] < 97))
-    {
-        return 0;
-    }
-    else if(strlen(name) > MAX_LABLE_SIZE){
-        return 0;
-    }
-    while(i<strlen(name)){
-        if((!isdigit(name[i])) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
-            return 0;
-        }
-        if(name[i] != '\0' && name[i] != '\n'){
-            return 1;
-        }
-        i++;
-    }
-    return 1;
-}
-int search_lable(char name[],int line_num){
+int search_lable(char name[],char need_called,int line_num){
     int i = 0;
     while (i < index_lable)
     {
         if(comper_words(name,lable_table[i].name)){
-            lable_table[i].line = realloc(lable_table->line,sizeof(int));
-            lable_table[i].line[lable_table->line_size] =  line_num;
+            lable_table[i].line = realloc(lable_table[i].line,sizeof(int));
+            lable_table[i].line[lable_table[i].line_size] =  line_num;
             lable_table[i].line_size++;
+            if(lable_table[i].need_called != 'N'){
+                if(need_called == 'n')
+                    lable_table[i].need_called = need_called;
+            }
             if(i)
                 return i;
             return 1;
@@ -92,9 +76,9 @@ int search_lable(char name[],int line_num){
     }
     return 0;
 }
-void add_lable(char *name,char called,int index,int line_num){
+void add_lable(char *name,char called,char need_called,int index,int line_num){
     if(index_lable == 0){
-       lable_table = malloc(sizeof(lable)); 
+       lable_table = malloc(sizeof(lable));
     }
     else {
         lable_table = reallocarray(lable_table,sizeof(lable),index_lable+1);
@@ -106,6 +90,7 @@ void add_lable(char *name,char called,int index,int line_num){
     temp.line_size = 1;
     strcpy(temp.name,name);
     temp.called = called;
+    temp.need_called = need_called;
     lable_table[index] = temp;
     index_lable++;
 }

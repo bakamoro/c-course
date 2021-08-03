@@ -14,13 +14,18 @@ int instructions_2(char line[81],char instruction[],int line_num,int index){
             return 1;
         }
         if(legal_label(label,line_num,'n')){
-            if((i =  search_lable(label,line_num))){
+            if((i = search_lable(label,'N',line_num))){
                 if(comper_words(instruction,".extern")){
-                    lable_table[i].ex = 'y';
+                    lable_table[i].called = 'x';
                 }
-                else lable_table[i].ex = 'n';
+                else lable_table[i].called = 'n';
             }
-            add_lable(label,'y',index_lable,line_num);
+            else {
+                if(comper_words(instruction,".extern")){
+                    add_lable(label,'x','N',index_lable,line_num);
+                }
+                else add_lable(label,'n','N',index_lable,line_num);
+            }
         }
     }
     if(num_of_pa == 0){
@@ -119,6 +124,16 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
     char i_0,i_1,i_2;
     int i = 0;
     int num_of_op = 0 , need_comma = 0;
+    int need_label = 0;
+    i = 11;
+    while(i<15){
+        if(comper_words(comand_name,comands_I[i])){
+            need_label = 1;
+            break;
+        }
+        i++;
+    }
+    i = 0;
     while(check_rest_of_line(line,index) && num_of_op < 4){
         index = bilt_array(line,operand,index);
         if(need_comma){
@@ -174,9 +189,11 @@ int incomand_I(char line[81],char comand_name[],int line_num,int index){
                 i_2 = 'l';
                 strcpy(op_2,operand);
             }
-            if(legal_label(operand,line_num,'n')){
-                if(!search_lable(operand,line_num)){
-                    add_lable(operand,'n',index,line_num);
+            if(need_label){
+                if(legal_label(operand,line_num,'n')){
+                    if(!search_lable(operand,'n',line_num)){
+                        add_lable(operand,'N','n',index_lable,line_num);
+                    }
                 }
             }
         }
@@ -242,8 +259,8 @@ int incomand_J(char line[81],char comand_name[],int line_num,int index){
                 type = 'l';
             }
             if(legal_label(operand,line_num,'n')){
-                if(!search_lable(operand,line_num)){
-                    add_lable(operand,'n',index,line_num);
+                if(!search_lable(operand,'y',line_num)){
+                    add_lable(operand,'N','y',index_lable,line_num);
                 }
             }
         }

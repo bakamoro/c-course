@@ -8,20 +8,30 @@
 #define MAX_LINE_SIZE  81
 extern int index_lable;
 //make a line from array of chasrs
-void read_line(FILE *fd,char p[81]){
+int read_line(FILE *fd,char p[81],int line_num){
 	int i = 0;
 	char c = fgetc(fd);
 	while(c != '\n' && (!feof(fd))){
-            p[i] = c;
-            i++;
-            c = fgetc(fd);
-        }
+        p[i] = c;
+        i++;
+        c = fgetc(fd);
+    }
 	p[i] = '\n';
-
+	if(i > (MAX_LINE_SIZE-1)){
+		printf("ERROR - line : %d - line bigger then 80",line_num);
+		return 1;
+	} 
+	return 0;
 }
 //skip a line.
-void next_line(FILE *fd){
-	while(!feof(fd) && fgetc(fd) != '\n');
+int next_line(FILE *fd,int line_num){
+	int i = 1;
+	while(!feof(fd) && fgetc(fd) != '\n')i++;
+	if(i > MAX_LINE_SIZE){
+		printf("ERROR - line : %d - line bigger then 80",line_num);
+		return 1;
+	}
+	return 0;
 }
 void main_check(char s[]){
 	FILE *fd = fopen(s,"r");
@@ -41,7 +51,7 @@ void main_check(char s[]){
 			while(((c = fgetc(fd)) == ' ' || c =='\t') && (!feof(fd)));
 			if(c == ';'){
 				line_num++;
-				next_line(fd);
+				next_line(fd,line_num);
 				break;
 			}
 			if (c == '\n' || feof(fd))
@@ -50,7 +60,7 @@ void main_check(char s[]){
 				break;
 			}
 			fsetpos(fd,&pos);
-			read_line(fd,p);
+			read_line(fd,p,line_num);
 			//לשלוח לפונקציה מקובץ אחר לא לשכוח לשלוח את מספר השורה.
 			char *la;
 			int a = main_line(p,la,line_num,0,0);
@@ -65,11 +75,13 @@ void main_check(char s[]){
 	//chcking that all the labels are called.
 	//lable * lable_table2 = get_lable_table();
 	while(i < index_lable){
-		if(lable_table[i].called == 'n'){
-			j = 0;
-			while(j < lable_table[i].line_size){
-				printf("ERROR - LINE : %d - UNDIFIND LABLE - %s\n",lable_table[i].line[j],lable_table[i].name);
-				j++;
+		if(lable_table[i].need_called != 'N'){
+			if((lable_table[i].need_called != lable_table[i].called) && (lable_table[i].called != 'y')){
+				j = 0;
+				while(j < lable_table[i].line_size){
+					printf("ERROR - line : %d -lable wasn't called - %s\n",lable_table[i].line[j],lable_table[i].name);
+					j++;
+				}
 			}
 		}
 		i++;

@@ -70,10 +70,10 @@ int main_line(char *line,char *label,int line_num,int index,int a){
     if (a == 1 && !in_instructions_2(word))
     {
         label[strlen(label)-1] = '\0';
-        if(!search_lable(label,line_num)){
+        if(!search_lable(label,'N',line_num)){
             label[strlen(label)] = ':';
             if(legal_label(label,line_num,'y')){
-                add_lable(label,'n',index_lable,line_num);
+                add_lable(label,'N','N',index_lable,line_num);
             }
         }
     }
