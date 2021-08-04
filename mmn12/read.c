@@ -19,12 +19,16 @@ double power(int num,double po){
 //הודק האם המספר שלם ועשוי כולו מספרות ויכול להיכנס ל -16 סיביות בשיטת המשלים. 
 int number_check(char s[],char file_name[],int line_number,int bit){
 	int i = 0;
+	if(s[0] == '+' || s[0] == '-'){
+		i++;
+	}
 	while(i < strlen(s)){
 		if(s[i] == '.'){
 			printf("ERROR - file : %s - line : %d - the asembler does not support decimal numbers\n",file_name,line_number);
 			return 0;
 		}
-		if(!(isdigit(s[i]))){
+		if(!(isdigit(s[i])) && s[i] != '\n'){
+			printf("ERROR - file : %s - line : %d - illegil number\n",file_name,line_number);
 			return 0;
         }
 		i++;

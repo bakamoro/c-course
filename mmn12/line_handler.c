@@ -70,7 +70,7 @@ int main_line(char *line,char *label,char file_name[],int line_num,int index,int
     if (a == 1 && !in_instructions_2(word))
     {
         label[strlen(label)-1] = '\0';
-        if(!search_lable(label,'N',line_num)){
+        if(!search_lable(label,'N',0)){
             label[strlen(label)] = ':';
             if(legal_label(label,file_name,line_num,'y')){
                 add_lable(label,'N','N',index_lable,line_num);

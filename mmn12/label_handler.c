@@ -61,9 +61,11 @@ int search_lable(char name[],char need_called,int line_num){
     while (i < index_lable)
     {
         if(comper_words(name,lable_table[i].name)){
-            lable_table[i].line = realloc(lable_table[i].line,sizeof(int));
-            lable_table[i].line[lable_table[i].line_size] =  line_num;
-            lable_table[i].line_size++;
+            if(line_num != 0){
+                lable_table[i].line = realloc(lable_table[i].line,sizeof(int));
+                lable_table[i].line[lable_table[i].line_size] =  line_num;
+                lable_table[i].line_size++;
+            }
             if(lable_table[i].need_called != 'N'){
                 if(need_called == 'n')
                     lable_table[i].need_called = need_called;

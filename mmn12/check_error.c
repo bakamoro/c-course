@@ -75,10 +75,17 @@ void main_check(char file_name[]){
 	//chcking that all the labels are called.
 	while(i < index_lable){
 		if(lable_table[i].need_called != 'N'){
-			if((lable_table[i].need_called != lable_table[i].called) && (lable_table[i].called != 'y')){
+			if(lable_table[i].need_called == 'n' && lable_table[i].called != 'n'){
 				j = 0;
 				while(j < lable_table[i].line_size){
-					printf("ERROR - file : %s - line : %d -lable wasn't called - %s\n",file_name,lable_table[i].line[j],lable_table[i].name);
+					printf("ERROR - file : %s - line : %d -lable isn't entry - %s\n",file_name,lable_table[i].line[j],lable_table[i].name);
+					j++;
+				}
+			}
+			if(lable_table[i].need_called == 'x' && lable_table[i].called != 'N'){
+				j = 0;
+				while(j < lable_table[i].line_size){
+					printf("ERROR - file : %s - line : %d -lable isn't entry / external - %s\n",file_name,lable_table[i].line[j],lable_table[i].name);
 					j++;
 				}
 			}
