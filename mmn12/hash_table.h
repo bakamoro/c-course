@@ -24,13 +24,13 @@ typedef struct struct_comand_j {
 
 comand_J arr_comand_j[4];
 
-comand_R bilt_comand_R(char s[],int a);
+comand_R bilt_comand_R(char name[],int num_of_pa);
 
-comand_R * bilt_array_R(char * s[]);
+comand_R * bilt_array_R(char * name[]);
 
-comand_I bilt_comand_I(char s[],int num_of_op,char i_0,char i_1,char i_2);
+comand_I bilt_comand_I(char name[],int num_of_op,char i_0,char i_1,char i_2);
 
-comand_I * bilt_array_I(char * s[]);
+comand_I * bilt_array_I(char * name[]);
 
 comand_J bilt_comand_J(char name[],int num_of_op,char type_1,char type_2);
 

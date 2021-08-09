@@ -15,8 +15,8 @@ double power(int num,double po){
 	}
 	return sum;
 }
-//check if the string is liglle number.
-//הודק האם המספר שלם ועשוי כולו מספרות ויכול להיכנס ל -16 סיביות בשיטת המשלים. 
+/*check if the string is liglle number.
+הודק האם המספר שלם ועשוי כולו מספרות ויכול להיכנס ל -16 סיביות בשיטת המשלים. */
 int number_check(char s[],char file_name[],int line_number,int bit){
 	int i = 0;
 	if(s[0] == '+' || s[0] == '-'){
@@ -33,17 +33,17 @@ int number_check(char s[],char file_name[],int line_number,int bit){
         }
 		i++;
 	}
-    if(atoi(s) > power(2,bit)){
+    if(atol(s) > power(2,bit)){
         printf("ERROR - file : %s - line : %d - number too big - %s\n",file_name,line_number,s);
         return 0;
     }
-    if(atoi(s) < -1*(power(2,bit))){
+    if(atol(s) < -1*(power(2,bit))){
         printf("EORROR - file : %s - line : %d - number too small - %s\n",file_name,line_number,s);
         return 0;
     }
     return 1;
 }
-//check if the rest of the line is not empty.
+/*check if the rest of the line is not empty*/
 int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	while(line[index] == ' ' || line[index] == '\t'){
         index++;
@@ -53,7 +53,7 @@ int check_rest_of_line(char line[MAX_LINE_SIZE],int index){
 	}
 	return 1;
 }
-//check if the hourder id liggle;
+/*check if the register is liggle*/
 int operand_chack(char op[4],char file_name[],int line_num){
 	int i = 1;
     if(strlen(op) < 2 || op[1] == '\n'){
@@ -95,7 +95,7 @@ int comper_words(char *label1,char *label2){
     }
     return 0;
 }
-//make a word from array of chasrs.
+/*read word from line*/
 int bilt_array(char p[],char p3[],int i){
 	int j = 0;
     while(i < MAX_WORD_SIZE && (p[i] == ' ' || p[i] == '\n' || p[i] == '\t')){

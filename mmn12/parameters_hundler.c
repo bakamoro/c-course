@@ -2,7 +2,15 @@
 #include "read.h"
 #include "label_handler.h"
 #include "hash_table.h"
-int instructions_2(char line[81],char instruction[],char file_name[],int line_num,int index){
+/*get line and instruction in instruction_2 and check :
+    1.the num of parameters equal 1
+    2.the label is lagal
+    if it's all proper : 
+    activate search_label and send type of called(extern - 'x' , entry - 'n')
+    if there is not such label chack thet the abel is legal with legal_label and add it to lable_tabel withe add_label
+    if there is an error return 1 if not return 0
+*/
+    int instructions_2(char line[81],char instruction[],char file_name[],int line_num,int index){
     char label[MAX_LABLE_SIZE];
     int num_of_pa = 0;
     int i = 0;
@@ -14,7 +22,7 @@ int instructions_2(char line[81],char instruction[],char file_name[],int line_nu
             return 1;
         }
         if(legal_label(label,file_name,line_num,'n')){
-            if((i = search_lable(label,'N',line_num))){
+            if((i = search_lable(label,'N','N',line_num))){
                 if(comper_words(instruction,".extern")){
                     lable_table[i].called = 'x';
                 }
@@ -23,8 +31,12 @@ int instructions_2(char line[81],char instruction[],char file_name[],int line_nu
             else {
                 if(comper_words(instruction,".extern")){
                     add_lable(label,'x','N',index_lable,line_num);
+                    index_lable++;
                 }
-                else add_lable(label,'n','N',index_lable,line_num);
+                else {
+                    add_lable(label,'n','N',index_lable,line_num);
+                    index_lable++;
+                }
             }
         }
     }
@@ -34,6 +46,21 @@ int instructions_2(char line[81],char instruction[],char file_name[],int line_nu
     }
     return 0;
 }
+/*
+get line and instruction in instruction_1 and check :
+    1.if the instruction is ascis in not continue if does :
+        check:
+            1.the string is legal.
+            2.the only paarmeter ids string.
+
+    2.find out wich instruction is it and give the right size.
+
+    3.there is a comma betwin parameters
+
+    4.chack that all parameters are legal numbers -
+    if does return 0,
+    if not return 1.
+*/
 int instructions_1(char line[81],char comand_name[],char file_name[],int line_num,int index){
     char asciz[] = ".asciz";
     char string[MAX_WORD_SIZE-7];
@@ -75,18 +102,25 @@ int instructions_1(char line[81],char comand_name[],char file_name[],int line_nu
     }
     return 0;
 }
-
+/*
+get line and command in comand R , bilt arr_comand_R and check :
+    1.there is a comma betwin parameters
+    2.chack that the number of parameters is same as the label tabel .
+    3.check that all parameters are registers.
+    4.chack that all registers are legal.
+    if all this is true return 0 if not return 1.
+*/
 int incomand_R(char line[81],char comand_name[],char file_name[],int line_num,int index){
     int i = 0 ,need_coma = 0;
-    int hoarder_num = 0;
-    char ho[4];
+    int register_num = 0;
+    char re[4];
     char * comands_R[8] = {"add","sub","and","or","nor","move","mvhi","mvlo"};
     comand_R * arr_comand_R = bilt_array_R(comands_R);
-    while(check_rest_of_line(line,index) && hoarder_num < 4){
-        index = bilt_array(line,ho,index);
+    while(check_rest_of_line(line,index) && register_num < 4){
+        index = bilt_array(line,re,index);
         if(need_coma){
-            if(ho[0] == ','){
-                index = bilt_array(line,ho,index);
+            if(re[0] == ','){
+                index = bilt_array(line,re,index);
             }
             else{
                 printf("ERROR - file : %s - line : %d - missing comma\n",file_name,line_num);
@@ -94,28 +128,37 @@ int incomand_R(char line[81],char comand_name[],char file_name[],int line_num,in
             }
         }
         else need_coma = 1;
-        if(!operand_chack(ho,file_name,line_num)){
+        if(!operand_chack(re,file_name,line_num)){
             return 1;
         }
-        hoarder_num++;
+        register_num++;
     }
-    if(hoarder_num == 4){
+    if(register_num == 4){
         printf("ERROR - file : %s - line : %d - to many oparends\n",file_name,line_num);
         return 1;
     }
     while(!comper_words(comand_name,arr_comand_R[i].name)){
         i++;
     }
-    if(arr_comand_R[i].num_of_op > hoarder_num){
+    if(arr_comand_R[i].num_of_op > register_num){
         printf("ERROR - file : %s - line : %d - to many oparends\n",file_name,line_num);
         return 1;
     }
-    if(arr_comand_R[i].num_of_op < hoarder_num){
+    if(arr_comand_R[i].num_of_op < register_num){
         printf("ERROR - file : %s - line : %d - to few oparends\n",file_name,line_num);
         return 1;
     }
     return 0;
 }
+/*
+get line and command in comand I and bilt arr_comand_I and check :
+    1.there is a comma betwin parameters
+    2.give type to all the parameters
+    3.if there label parameter activate : sarch -> lagal -> add
+    4.chck that number of parameters equal to number of parameters in arr_comand_I
+    5.chck that type of parameters equal to type of parameters in arr_comand_I
+    if all this is true return 0 if not return 1.
+*/
 int incomand_I(char line[81],char comand_name[],char file_name[],int line_num,int index){
     char * comands_I[15] = {"addi","subi","andi","ori","nori","lb","sb","lw","sw","lh","sh","bne","beq","blt","bgt"};
     comand_I * arr_comand_I = bilt_array_I(comands_I);
@@ -191,7 +234,7 @@ int incomand_I(char line[81],char comand_name[],char file_name[],int line_num,in
             }
             if(need_label){
                 if(legal_label(operand,file_name,line_num,'n')){
-                    if(!search_lable(operand,'n',line_num)){
+                    if(!search_lable(operand,'N','n',line_num)){
                         add_lable(operand,'N','n',index_lable,line_num);
                     }
                 }
@@ -226,6 +269,16 @@ int incomand_I(char line[81],char comand_name[],char file_name[],int line_num,in
     }
     return 0;
 }
+/*
+get line and command in comand I and bilt arr_comand_J and :
+    1.chack that there is a comma betwin parameters
+    2.give type to all the parameters
+    3.if there label parameter activate : sarch -> lagal -> add
+    4.chck that number of parameters equal to number of parameters in arr_comand_J
+    5.chck that type of parameters equal to type of parameters in arr_comand_J
+    if all this is true return 0 if not return 1.
+*/
+
 int incomand_J(char line[81],char comand_name[],char file_name[],int line_num,int index){
     char * comands_J[4] = {"jmp","la","call","stop"};
     comand_J * arr_comand_j = bilt_array_J(comands_J);
@@ -259,7 +312,7 @@ int incomand_J(char line[81],char comand_name[],char file_name[],int line_num,in
                 type = 'l';
             }
             if(legal_label(operand,file_name,line_num,'n')){
-                if(!search_lable(operand,'y',line_num)){
+                if(!search_lable(operand,'N','y',line_num)){
                     add_lable(operand,'N','y',index_lable,line_num);
                 }
             }

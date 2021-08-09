@@ -4,7 +4,8 @@
 #include "label_handler.h"
 #include "parameters_hundler.h"
 #define MAX_WORD_SIZE  81
-extern int index_lable;
+extern size_t index_lable;
+/*check if the word is type comand R if not return 0*/
 int in_comands_R(char word[]){
     int i = 0;
     char * comands_R[8] = {"add","sub","and","or","nor","move","mvhi","mvlo"};
@@ -16,6 +17,7 @@ int in_comands_R(char word[]){
     }
     return 0;
 }
+/*check if the word is type comand I if not return 0*/
 int in_comands_I(char word[]){
     int i = 0;  
     char * comands_I[15] = {"addi","subi","andi","ori","nori","bne","beq","blt","bgt","lb","sb","lw","sw","lh","sh"};
@@ -27,6 +29,7 @@ int in_comands_I(char word[]){
     }
     return 0;
 }
+/*check if the word is type comand J if not return 0*/
 int in_comands_J(char word[]){
     int i = 0;
     char * comands_J[4] = {"jmp","la","call","stop"};
@@ -38,6 +41,7 @@ int in_comands_J(char word[]){
     }
     return 0;
 }
+/*check if the word is in instructions_1 if not return 0*/
 int in_instructions_1(char word[]){
     int i = 0;
     char * instructions_1[4] = {".dw",".db",".dh",".asciz"};
@@ -49,6 +53,7 @@ int in_instructions_1(char word[]){
     }
     return 0;
 }
+/*check if the word is in instructions_2 if not return 0*/
 int in_instructions_2(char word[]){
     int i = 0;
     char * instructions_2[2] = {".entry",".extern"};
@@ -60,25 +65,29 @@ int in_instructions_2(char word[]){
     }
     return 0;
 }
+/*get line check first word :
+    1.if label -> sarch if label already exist if does -> breake 
+      if not check -> if ligal -> add_label , if not print error.
 
+    2.chack if command/instructoin word exist if does send to functuon if not return 0*/
 int main_line(char *line,char *label,char file_name[],int line_num,int index,int a){
     char word[MAX_WORD_SIZE];
     if(a == 2){
         return 0;
     }
     index = bilt_array(line,word,index);
-    if (a == 1 && !in_instructions_2(word))
+    if (a == 1)
     {
         label[strlen(label)-1] = '\0';
-        if(!search_lable(label,'N',0)){
+        if(!search_lable(label,'n','N',0)){
             label[strlen(label)] = ':';
             if(legal_label(label,file_name,line_num,'y')){
-                add_lable(label,'N','N',index_lable,line_num);
+                if(!in_instructions_2(word))
+                    add_lable(label,'n','N',index_lable,line_num);
             }
         }
     }
     if(in_comands_R(word)){
-        //לשלוח לפונקציה שתאמת מספר אופרנדים וסוג
         incomand_R(line,word,file_name,line_num,index);
         return 1;
     }

@@ -6,8 +6,8 @@
 #include "line_handler.h"
 #include "label_handler.h"
 #define MAX_LINE_SIZE  81
-extern int index_lable;
-//make a line from array of chasrs
+extern size_t index_lable;
+/*read line*/
 int read_line(FILE *fd,char p[81],char file_name[],int line_num){
 	int i = 0;
 	char c = fgetc(fd);
@@ -18,21 +18,22 @@ int read_line(FILE *fd,char p[81],char file_name[],int line_num){
     }
 	p[i] = '\n';
 	if(i > (MAX_LINE_SIZE-1)){
-		printf("ERROR - file : %s - line : %d - line bigger then 80",file_name,line_num);
+		printf("ERROR - file : %s - line : %d - line bigger then 80\n",file_name,line_num);
 		return 1;
 	}
 	return 0;
 }
-//skip a line.
+/*skip a line*/
 int next_line(FILE *fd,char file_name[],int line_num){
 	int i = 1;
 	while(!feof(fd) && fgetc(fd) != '\n')i++;
 	if(i > MAX_LINE_SIZE){
-		printf("ERROR - file : %s - line : %d - line bigger then 80",file_name,line_num);
+		printf("ERROR - file : %s - line : %d - line bigger then 80\n",file_name,line_num);
 		return 1;
 	}
 	return 0;
 }
+/*get file -> open it read a line -> sent the line to another function to handle and does it again until reach the end of file*/
 void main_check(char file_name[]){
 	FILE *fd = fopen(file_name,"r");
 	fpos_t pos;
@@ -40,6 +41,9 @@ void main_check(char file_name[]){
 	char *p;
 	int line_num = 1;
 	int i = 0,j = 0;
+	char *la = 0;
+	int a;
+	/*in case of faild to open the file*/
 	if(fd == NULL){
 		printf("ERROR - can't open the file - %s\n",file_name);
 		exit(0);
@@ -48,12 +52,15 @@ void main_check(char file_name[]){
 		while(!feof(fd)){
 			p = malloc(MAX_LINE_SIZE);
 			fgetpos(fd,&pos);
+			/*losing the tabs and the spaces*/
 			while(((c = fgetc(fd)) == ' ' || c =='\t') && (!feof(fd)));
+			/*handle the case of documentation line*/
 			if(c == ';'){
 				line_num++;
 				next_line(fd,file_name,line_num);
 				break;
 			}
+			/*handle the case of ...*/
 			if (c == '\n' || feof(fd))
 			{
 				line_num++;
@@ -61,9 +68,9 @@ void main_check(char file_name[]){
 			}
 			fsetpos(fd,&pos);
 			read_line(fd,p,file_name,line_num);
-			//לשלוח לפונקציה מקובץ אחר לא לשכוח לשלוח את מספר השורה.
-			char *la;
-			int a = main_line(p,la,file_name,line_num,0,0);
+			/*send to line_handler the line that return if comand is find*/
+			a = main_line(p,la,file_name,line_num,0,0);
+			/*in case that no comand found*/
 			if (!(a))
 			{
 				printf("ERROR - file : %s - line : %d - NO INSTRUCTUON OR COMAND FOUND\n",file_name,line_num);
@@ -72,9 +79,10 @@ void main_check(char file_name[]){
 			line_num++;
 		}
 	}
-	//chcking that all the labels are called.
+	/*chcking that all the labels are called at there types*/
 	while(i < index_lable){
 		if(lable_table[i].need_called != 'N'){
+			/*in case that the label need to be called entry end was not called or calle external*/
 			if(lable_table[i].need_called == 'n' && lable_table[i].called != 'n'){
 				j = 0;
 				while(j < lable_table[i].line_size){
@@ -82,6 +90,7 @@ void main_check(char file_name[]){
 					j++;
 				}
 			}
+			/*in case that the label need to be called external \ entry end was not called*/
 			if(lable_table[i].need_called == 'x' && lable_table[i].called != 'N'){
 				j = 0;
 				while(j < lable_table[i].line_size){
@@ -97,4 +106,5 @@ void main_check(char file_name[]){
 int main(){
 	main_check("ps.as");
 	printf("finish\n");
+	return 1;
 }

@@ -4,7 +4,13 @@
 #include <ctype.h>
 #include "read.h"
 #define MAX_LABLE_SIZE 31
-int index_lable = 0;
+size_t index_lable = 0;
+/*
+called / need_called - can be :
+    1.'n' - for entry
+    2.'x' - for external
+    3.'N' - for NULL
+*/
 typedef struct lablea
 {
     char name[MAX_LABLE_SIZE];
@@ -14,6 +20,13 @@ typedef struct lablea
     int line_size;
 }lable;
 lable * lable_table;
+/*chack if the lable is legal meens that :
+    1.the label start with a letter (bid or small)
+    2.the number of characters is smaller then 31
+    3.if the label in the start of the line the label end with - ':'
+    4.that all of the caracters are digit/letter
+    if the label is not legal print why and return 0;
+*/
 int legal_label(char *name,char file_name[],int line_num,char start_line){
     int i = 1;
     if ((name[0] < 65 || name[0] > 122) || (name[0] > 90 && name[0] < 97))
@@ -23,13 +36,13 @@ int legal_label(char *name,char file_name[],int line_num,char start_line){
     }
     if(start_line == 'y'){
         if(strlen(name)-1 > MAX_LABLE_SIZE){
-            printf("ERROR - file : %s - line : %d - illegal label : to many letters : %s\n",file_name,line_num,name);
+            printf("ERROR - file : %s - line : %d - illegal label : to many characters : %s\n",file_name,line_num,name);
             return 0;
         }
     }
 
     else if(strlen(name) > MAX_LABLE_SIZE){
-        printf("ERROR - file : %s - line : %d - illegal label : to many letters : %s\n",file_name,line_num,name);
+        printf("ERROR - file : %s - line : %d - illegal label : to many charcters : %s\n",file_name,line_num,name);
         return 0;
     }
     while(i<strlen(name) && name[i] != '\n'){
@@ -56,7 +69,8 @@ int legal_label(char *name,char file_name[],int line_num,char start_line){
     }
     return 1;
 }
-int search_lable(char name[],char need_called,int line_num){
+/*search if the label is in the lable_table if true return his index*/
+int search_lable(char name[],char called,char need_called,int line_num){
     int i = 0;
     while (i < index_lable)
     {
@@ -70,6 +84,9 @@ int search_lable(char name[],char need_called,int line_num){
                 if(need_called == 'n')
                     lable_table[i].need_called = need_called;
             }
+            if(called == 'n' || lable_table[i].called == 'N'){
+                lable_table[i].called = called;
+            }
             if(i)
                 return i;
             return 1;
@@ -78,14 +95,15 @@ int search_lable(char name[],char need_called,int line_num){
     }
     return 0;
 }
+/*add label to the lable_table*/
 void add_lable(char *name,char called,char need_called,int index,int line_num){
+    static lable temp;
     if(index_lable == 0){
        lable_table = malloc(sizeof(lable));
     }
     else {
-        lable_table = reallocarray(lable_table,sizeof(lable),index_lable+1);
+        lable_table = (lable *) (realloc(lable_table,sizeof(lable)*(index_lable+1)));
     }
-    static lable temp;
     name[strlen(name)-1] = '\0';
     temp.line = malloc(sizeof(int));
     temp.line[0] = line_num;
