@@ -9,4 +9,6 @@ git push origin master
 #create new branch
 #git checkout -b fixbug1
 
+#push to branch
+#git push origin fixbug1
 
