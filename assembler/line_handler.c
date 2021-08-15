@@ -73,7 +73,8 @@ int in_instructions_2(char word[]){
 int main_line(char *line,char *label,char file_name[],int line_num,int index,int a){
     char word[MAX_WORD_SIZE];
     if(a == 2){
-        return 0;
+        printf("ERROR - file : %s - line : %d - NO INSTRUCTUON OR COMAND FOUND\n",file_name,line_num);
+        return 1;
     }
     index = bilt_array(line,word,index);
     if (a == 1)
@@ -88,24 +89,19 @@ int main_line(char *line,char *label,char file_name[],int line_num,int index,int
         }
     }
     if(in_comands_R(word)){
-        incomand_R(line,word,file_name,line_num,index);
-        return 1;
+        return incomand_R(line,word,file_name,line_num,index);
     }
     else if (in_comands_I(word)){
-        incomand_I(line,word,file_name,line_num,index);
-        return 1;
+        return incomand_I(line,word,file_name,line_num,index);
     }
     else if (in_comands_J(word)){
-        incomand_J(line,word,file_name,line_num,index);
-        return 1;
+        return incomand_J(line,word,file_name,line_num,index);
     }
     else if (in_instructions_1(word)){
-        instructions_1(line,word,file_name,line_num,index);
-        return 1;
+        return instructions_1(line,word,file_name,line_num,index);
     }
     else if (in_instructions_2(word)){
-        instructions_2(line,word,file_name,line_num,index);
-        return 1;
+        return instructions_2(line,word,file_name,line_num,index);
     }
     else return main_line(line,word,file_name,line_num,index,(++a));
 }
