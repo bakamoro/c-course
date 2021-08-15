@@ -6,3 +6,7 @@ git pull --rebase origin master
 #commit the changes --amend
 git push origin master
 
+#create new branch
+#git checkout -b fixbug1
+
+
