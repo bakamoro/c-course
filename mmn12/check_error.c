@@ -34,13 +34,14 @@ int next_line(FILE *fd,char file_name[],int line_num){
 	return 0;
 }
 /*get file -> open it read a line -> sent the line to another function to handle and does it again until reach the end of file*/
-void main_check(char file_name[]){
+int main_check(char file_name[]){
 	FILE *fd = fopen(file_name,"r");
 	fpos_t pos;
 	char c;
 	char *p;
 	int line_num = 1;
 	int i = 0,j = 0;
+	int error = 0;
 	char *la = 0;
 	int a;
 	/*in case of faild to open the file*/
@@ -71,9 +72,9 @@ void main_check(char file_name[]){
 			/*send to line_handler the line that return if comand is find*/
 			a = main_line(p,la,file_name,line_num,0,0);
 			/*in case that no comand found*/
-			if (!(a))
+			if (a)
 			{
-				printf("ERROR - file : %s - line : %d - NO INSTRUCTUON OR COMAND FOUND\n",file_name,line_num);
+				error = 1;
 			}
 			free(p);
 			line_num++;
@@ -87,6 +88,7 @@ void main_check(char file_name[]){
 				j = 0;
 				while(j < lable_table[i].line_size){
 					printf("ERROR - file : %s - line : %d -lable isn't entry - %s\n",file_name,lable_table[i].line[j],lable_table[i].name);
+					error = 1;
 					j++;
 				}
 			}
@@ -95,6 +97,7 @@ void main_check(char file_name[]){
 				j = 0;
 				while(j < lable_table[i].line_size){
 					printf("ERROR - file : %s - line : %d -lable isn't entry / external - %s\n",file_name,lable_table[i].line[j],lable_table[i].name);
+					error = 1;
 					j++;
 				}
 			}
@@ -102,6 +105,7 @@ void main_check(char file_name[]){
 		i++;
 	}
 	fclose(fd);
+	return error;
 }
 int main(){
 	main_check("ps.as");
