@@ -129,6 +129,20 @@ int bilt_array(char p[],char p3[],int i){
 	p3[j] = '\0';
 	return i;
 }
+int line_empty(FILE *fd){
+	fpos_t pos;
+	char c;
+	fgetpos(fd,&pos);
+	c = fgetc(fd);
+	while((c == ' ' || c == '\t') && !feof(fd)){
+		c = fgetc(fd);
+	}
+	if(c == '\n' || feof(fd)){
+		return 1;
+	}
+	fsetpos(fd,&pos);
+	return 0;
+}
 void subtract_space(char file_name[],char FILE_NAME[]){
 	FILE * fd_one = fopen(file_name,"r");
 	FILE * fd_two = fopen(FILE_NAME,"w");
@@ -138,6 +152,9 @@ void subtract_space(char file_name[],char FILE_NAME[]){
 	int comma = 0;
 	char c;
 	while((!feof(fd_one))){
+		if(line_empty(fd_one)){
+			continue;
+		}
 		c = fgetc(fd_one);
 		if(start_line == 1 && c == ';'){
 			dequmention_line = 1;

@@ -58,7 +58,8 @@ int main(int argc, char* argv[])
     char* fullFileName = NULL;
     FILE* file;
     char file_name[] = "shimi";
-    subtract_space("ps.as",file_name);
+    char c;
+    
     
     if (argc <= 1)
     {
@@ -69,6 +70,7 @@ int main(int argc, char* argv[])
     {
         fullFileName = NULL;
         fullFileName = argv[k];
+        subtract_space(fullFileName,file_name);
         if (fullFileName)
         {
             printf(" -- File: %s -- \n", fullFileName);
@@ -81,12 +83,13 @@ int main(int argc, char* argv[])
                 nodeMachine* ptr = NULL;
                 nodeExtern* e_node = NULL;
 
-              /*  if(main_check(fullFileName))
+                if(main_check(fullFileName))
                 {
                     printf(" -- File: %s couldn't be created because there are error to fix in it. --\n", fullFileName);
                     break;
 
-                }*/
+                }
+                
 
                 if (firstPass(&head, &ptr, &e_node, &DC, &IC, file)) /*IF ERROR FOUND*/
                 {
