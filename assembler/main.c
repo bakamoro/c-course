@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     FILE* file;
     char file_name[] = "shimi";
     subtract_space("ps.as",file_name);
-    printf("pass\n");
+    
     if (argc <= 1)
     {
         printf("No File where typed.\n");
