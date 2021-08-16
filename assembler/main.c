@@ -58,7 +58,6 @@ int main(int argc, char* argv[])
     char* fullFileName = NULL;
     FILE* file;
     char file_name[] = "shimi";
-    char c;
     
     
     if (argc <= 1)

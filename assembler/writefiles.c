@@ -106,6 +106,9 @@ void writeFiles(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* 
     char* tempString;
     char* inputFileName = filename;
     char* fullFileName;
+    char entSuffix[] = ".ent";
+    char extSuffix[] = ".ext";
+    
     int codeSize, begFrom, countRow = 0, ICF = *IC - 100, DCF = *DC , countLines=100;
     int i, j;
     size_t strLen;
@@ -196,7 +199,7 @@ void writeFiles(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* 
     free(fullFileName);
 
 
-    char entSuffix[] = ".ent";
+
     fullFileName = (char*)calloc(inputFileNameLen + strlen(entSuffix) + 1, 1);
     if (fullFileName == NULL)
     {
@@ -227,8 +230,8 @@ void writeFiles(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* 
     fclose(entFile);
     free(fullFileName);
 
-
-    char extSuffix[] = ".ext";
+    
+    
 
     fullFileName = (char*)calloc(inputFileNameLen + strlen(extSuffix) + 1, 1);
     if (fullFileName == NULL)
