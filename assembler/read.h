@@ -13,4 +13,5 @@ int operand_chack(char * op,char file_name[],int line_num);
 int comper_words(char *label1,char *label2);
 int string_check(char *string);
 double power(int num,int po);
+FILE * subtract_space(char file_name[]);
 #endif
