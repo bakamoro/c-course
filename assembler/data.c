@@ -33,6 +33,7 @@ void addMachineNode(nodeMachine** ptr_head, int memValue, char* machineCode,char
 	{
 
 		nodeMachine* temp1 = (nodeMachine*)calloc(1,sizeof(nodeMachine));
+		int insertFlag=1;
 
 		if (temp1 == NULL)
 		{
@@ -52,9 +53,8 @@ void addMachineNode(nodeMachine** ptr_head, int memValue, char* machineCode,char
 
 				temp1->next = (*ptr_head);
 				temp1->type = type;
-
-
 				(*ptr_head) = temp1;
+				insertFlag=0;
 
 
 			}
@@ -63,34 +63,42 @@ void addMachineNode(nodeMachine** ptr_head, int memValue, char* machineCode,char
 				/*Search Until you find D type node*/
 				ptr = (*ptr_head);
 
-				while(ptr!=NULL && (ptr->next->type == 'D'))
+				while(ptr!=NULL)
 				{
 					if(ptr->next == NULL) /* If there is no D type node*/
 					{
-						continue;/*Add to the end of the list*/
+						break;/*Add to the end of the list*/
+
+					}
+					else if(ptr->next->type != 'D')
+					{
+					ptr = ptr->next;
+
+					}
+					else
+					{
+						temp1->address = memValue;
+						strcpy(temp1->code, machineCode);
+						temp1->next = ptr->next;
+						temp1->type = type;
+						ptr->next = temp1;
+						insertFlag=0;
 
 					}
 
-					ptr = ptr->next;
-
 				}
-
-				temp1->address = memValue;
-				strcpy(temp1->code, machineCode);
-				temp1->next = ptr->next;
-				temp1->type = type;
-				ptr->next = temp1;
 
 
 
 			}
-			else
+			if(insertFlag == 1) /*insert to the end of the  list*/
 			{
 
 				temp1->address = memValue;
 
 				strcpy(temp1->code, machineCode);
 				temp1->next = NULL;
+				temp1->type = type;
 
 				ptr = *ptr_head;
 
