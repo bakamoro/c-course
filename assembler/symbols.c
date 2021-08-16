@@ -11,6 +11,7 @@
 #include "data.h"
 #include "helpers.h"
 #include "writefiles.h"
+#include "read.h"
 
 
 
@@ -76,9 +77,9 @@ int searchSymbol(nodeSymbol** p_head, char* name)
         return 0;
 
 
-    while (ptr != NULL)
+    while (ptr!= NULL)
     {
-        if (!strcmp(ptr->name, name))
+        if (!comper_words(ptr->name, name))
         {
             return 1;
 
@@ -104,7 +105,7 @@ int returnAddress(nodeSymbol** p_head, char* name)
 
     while (ptr != NULL)
     {
-        if (!strcmp(ptr->name, name))
+        if (!comper_words(ptr->name, name))
         {
             return ptr->memValue;
 
