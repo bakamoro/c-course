@@ -57,6 +57,9 @@ int main(int argc, char* argv[])
 
     char* fullFileName = NULL;
     FILE* file;
+    char file_name[] = "shimi";
+    subtract_space("ps.as",file_name);
+    printf("pass\n");
     if (argc <= 1)
     {
         printf("No File where typed.\n");
@@ -69,7 +72,7 @@ int main(int argc, char* argv[])
         if (fullFileName)
         {
             printf(" -- File: %s -- \n", fullFileName);
-            file = fopen(fullFileName, "r");
+            file = fopen(file_name, "r");
             if (file)
             {
             	int DC = 0, IC = 100;
@@ -118,5 +121,7 @@ int main(int argc, char* argv[])
 
 
     }
+    fclose(file);
+    remove(file_name);
     return 0;
 }
