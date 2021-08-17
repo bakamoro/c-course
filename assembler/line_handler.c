@@ -80,21 +80,20 @@ int main_line(char *line,char *label,char file_name[],int line_num,int index,int
     index = bilt_array(line,word,index);
     if (a == 1)
     {
-        label[strlen(label)-1] = '\0';
-        if(!search_lable(label,'n','N',0)){
-            label[strlen(label)] = ':';
-            if(legal_label(label,file_name,line_num,'y')){
+        if(legal_label(label,file_name,line_num,'y')){
+            label[strlen(label)-1] = '\0';
+            if(!search_lable(label,'n','N',line_num)){
                 if(!in_instructions_2(word))
                     add_lable(label,'n','N',index_lable,line_num);
-            }
-        }
-        else {
-            i = find_label(label);
-            if(lable_table[i].called != 'N'){
-                    printf("ERROR - file : %s - line : %d - label allrady called - %s\n",file_name,line_num,label);
-                    return 1;
                 }
-        }
+            }
+            else {
+                i = find_label(label);
+                if(lable_table[i].called != 'N'){
+                        printf("ERROR - file : %s - line : %d - label allrady called - %s\n",file_name,line_num,label);
+                        return 1;
+                    }
+            }
     }
     if(in_comands_R(word)){
         return incomand_R(line,word,file_name,line_num,index);

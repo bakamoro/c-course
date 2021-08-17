@@ -131,5 +131,5 @@ void add_lable(char *name,char called,char need_called,int index,int line_num){
 int find_label(char name[]){
     int i = 0;
     while(!comper_words(name,lable_table[i].name))i++;
-    return 1;
+    return i;
 }
