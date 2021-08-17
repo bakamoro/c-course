@@ -24,14 +24,20 @@
         if(legal_label(label,file_name,line_num,'n')){
             if((search_lable(label,'N','N',line_num))){
                 i = find_label(label);
-                if(lable_table[i].called != 'N'){
-                    printf("ERROR - file : %s - line : %d - label allrady called - %s\n",file_name,line_num,label);
-                    return 1;
-                }
                 if(comper_words(instruction,".extern")){
+                    if(lable_table[i].called == 'n'){
+                        printf("ERROR - file : %s - line : %d - label allrady called as entry - %s\n",file_name,line_num,label);
+                        return 1;
+                    }
                     lable_table[i].called = 'x';
                 }
-                else lable_table[i].called = 'n';
+                else {
+                    if(lable_table[i].called == 'x'){
+                    printf("ERROR - file : %s - line : %d - label allrady called as external- %s\n",file_name,line_num,label);
+                    return 1;
+                }
+                    lable_table[i].called = 'n';
+                }
             }
             else {
                 if(comper_words(instruction,".extern")){
