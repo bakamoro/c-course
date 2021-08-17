@@ -130,6 +130,12 @@ int secondPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, FILE* 
         char* pntr;
         char* tempLabel;
 
+        if (!strcmp(line, "\n") || strchr(line, ';')) /*Check If Empty Sentence Or Comment Sentence*/
+        {
+            LC++;
+            continue;
+        }
+
 
         token = strtok(line, " "); /*Get The Lable/command/instruction*/
         if (strlen(token) == lineSize)
