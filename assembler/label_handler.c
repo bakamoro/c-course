@@ -104,8 +104,6 @@ int search_lable(char name[],char called,char need_called,int line_num){
             if(called == 'n' || lable_table[i].called == 'N'){
                 lable_table[i].called = called;
             }
-            if(i)
-                return i;
             return 1;
         }
         i++;
@@ -121,7 +119,6 @@ void add_lable(char *name,char called,char need_called,int index,int line_num){
     else {
         lable_table = (lable *) (realloc(lable_table,sizeof(lable)*(index_lable+1)));
     }
-    name[strlen(name)-1] = '\0';
     temp.line = malloc(sizeof(int));
     temp.line[0] = line_num;
     temp.line_size = 1;
@@ -130,4 +127,9 @@ void add_lable(char *name,char called,char need_called,int index,int line_num){
     temp.need_called = need_called;
     lable_table[index] = temp;
     index_lable++;
+}
+int find_label(char name[]){
+    int i = 0;
+    while(!comper_words(name,lable_table[i].name))i++;
+    return 1;
 }

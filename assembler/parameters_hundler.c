@@ -22,7 +22,12 @@
             return 1;
         }
         if(legal_label(label,file_name,line_num,'n')){
-            if((i = search_lable(label,'N','N',line_num))){
+            if((search_lable(label,'N','N',line_num))){
+                i = find_label(label);
+                if(lable_table[i].called != 'N'){
+                    printf("ERROR - file : %s - line : %d - label allrady called - %s\n",file_name,line_num,label);
+                    return 1;
+                }
                 if(comper_words(instruction,".extern")){
                     lable_table[i].called = 'x';
                 }

@@ -72,6 +72,7 @@ int in_instructions_2(char word[]){
     2.chack if command/instructoin word exist if does send to functuon if not return 0*/
 int main_line(char *line,char *label,char file_name[],int line_num,int index,int a){
     char word[MAX_WORD_SIZE];
+    int i;
     if(a == 2){
         printf("ERROR - file : %s - line : %d - NO INSTRUCTUON OR COMAND FOUND\n",file_name,line_num);
         return 1;
@@ -86,6 +87,13 @@ int main_line(char *line,char *label,char file_name[],int line_num,int index,int
                 if(!in_instructions_2(word))
                     add_lable(label,'n','N',index_lable,line_num);
             }
+        }
+        else {
+            i = find_label(label);
+            if(lable_table[i].called != 'N'){
+                    printf("ERROR - file : %s - line : %d - label allrady called - %s\n",file_name,line_num,label);
+                    return 1;
+                }
         }
     }
     if(in_comands_R(word)){
