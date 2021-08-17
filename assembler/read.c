@@ -84,6 +84,7 @@ int string_check(char *string){
 	}
 	return 0;
 }
+/*handle only words that bilds with bild array*/
 int comper_words(char *label1,char *label2){
     int i = 0;
     while(label1[i] == label2[i] && label2[i] != '\n' && label1[i] != '\n' && label1[i] != '\0' && label2[i] != '\0'){

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "read.h"
+#include "line_handler.h"
 #define MAX_LABLE_SIZE 31
 size_t index_lable = 0;
 /*
@@ -40,23 +41,39 @@ int legal_label(char *name,char file_name[],int line_num,char start_line){
             return 0;
         }
     }
-
     else if(strlen(name) > MAX_LABLE_SIZE){
         printf("ERROR - file : %s - line : %d - illegal label : to many charcters : %s\n",file_name,line_num,name);
+        return 0;
+    }
+    if(in_comands_I(name)){
+        printf("ERROR - file : %s - line : %d - illegal label : type comand I - %s\n",file_name,line_num,name);
+        return 0;
+    }
+    if(in_comands_J(name)){
+        printf("ERROR - file : %s - line : %d - illegal label : type comand J - %s\n",file_name,line_num,name);
+        return 0;
+    }
+    if(in_comands_R(name)){
+        printf("ERROR - file : %s - line : %d - illegal label : type comand R - %s\n",file_name,line_num,name);
+        return 0;
+    }
+    if(in_instructions_1(name)){
+        printf("ERROR - file : %s - line : %d - illegal label : type intruction - %s\n",file_name,line_num,name);
+        return 0;
+    }
+    if(in_instructions_2(name)){
+        printf("ERROR - file : %s - line : %d - illegal label : type intruction - %s\n",file_name,line_num,name);
         return 0;
     }
     while(i<strlen(name) && name[i] != '\n'){
         if(start_line == 'y'){
             if(i == strlen(name)-1){
-                return 1;
+                break;
             }
         }
         if((!isdigit(name[i])) && ((name[i] < 65 || name[i] > 122) || (name[i] > 90 && name[i] < 97))){
             printf("ERROR - file : %s - line : %d - illegal label : %s\n",file_name,line_num,name);
             return 0;
-        }
-        if(name[i] != '\0' && name[i] != '\n'){
-            return 1;
         }
         i++;
     }

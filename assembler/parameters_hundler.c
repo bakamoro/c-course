@@ -39,6 +39,7 @@
                 }
             }
         }
+        else return 1;
     }
     if(num_of_pa == 0){
         printf("ERROR - file : %s - line : %d - TO FEW PARAMETERS\n ",file_name,line_num);
@@ -140,11 +141,11 @@ int incomand_R(char line[81],char comand_name[],char file_name[],int line_num,in
     while(!comper_words(comand_name,arr_comand_R[i].name)){
         i++;
     }
-    if(arr_comand_R[i].num_of_op > register_num){
+    if(arr_comand_R[i].num_of_op < register_num){
         printf("ERROR - file : %s - line : %d - to many oparends\n",file_name,line_num);
         return 1;
     }
-    if(arr_comand_R[i].num_of_op < register_num){
+    if(arr_comand_R[i].num_of_op > register_num){
         printf("ERROR - file : %s - line : %d - to few oparends\n",file_name,line_num);
         return 1;
     }
