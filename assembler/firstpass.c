@@ -18,7 +18,7 @@
 
 
 
-void proccessGuidance(char* token ,int* Address,int* DC,int* LC,nodeMachine** ptr,char* machCode)
+void proccessGuidance(char* token ,int* DC,int* LC,nodeMachine** ptr,char* machCode)
 {
 
 	if (!strcmp(token, ".asciz"))
@@ -26,20 +26,20 @@ void proccessGuidance(char* token ,int* Address,int* DC,int* LC,nodeMachine** pt
 
 		unsigned int i=0;
 		token = strtok(NULL, "\"");
-		*DC = *DC + strlen(token) + 1; /*Update DC*/
+
 
 		for (i=0; i < strlen(token); i++) /*Insert Every Letter to the machine Code List*/
 		{
 			InitMachCode(machCode);
 			strcat(machCode, decimal_to_binary((token[i]), 8));
-			addMachineNode(ptr, *Address, machCode,'D');
-			*Address = *Address + 1;
+			addMachineNode(ptr, *DC , machCode,'D');
+			*DC = *DC +1;
 			*LC = *LC +1;
 		}
 		InitMachCode(machCode);
 		strcat(machCode, decimal_to_binary(0, 8));
-		addMachineNode(ptr, *Address, machCode,'D');
-		*Address = *Address + 1;
+		addMachineNode(ptr, *DC, machCode,'D');
+		*DC = *DC +1;
 		*LC = *LC +1;
 
 
@@ -68,8 +68,7 @@ void proccessGuidance(char* token ,int* Address,int* DC,int* LC,nodeMachine** pt
 				k = atoi(token);
 				InitMachCode(machCode);
 				strcat(machCode, decimal_to_binary(k, bits));
-				addMachineNode(ptr, *Address, machCode,'D');
-				*Address = *Address + bits / 8;
+				addMachineNode(ptr, *DC, machCode,'D');
 				*DC = *DC + bits / 8;
 				*LC = *LC +1;
 				temp = temp + strlen(token) + 1;
@@ -82,8 +81,7 @@ void proccessGuidance(char* token ,int* Address,int* DC,int* LC,nodeMachine** pt
 			k = atoi(token);
 			InitMachCode(machCode);
 			strcat(machCode, decimal_to_binary(k, bits));
-			addMachineNode(ptr, *Address, machCode,'D');
-			*Address = *Address + bits / 8;
+			addMachineNode(ptr, *DC, machCode,'D');
 			*DC = *DC + bits / 8;
 			*LC = *LC +1;
 
@@ -95,7 +93,7 @@ void proccessGuidance(char* token ,int* Address,int* DC,int* LC,nodeMachine** pt
 
 
 }
-int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nodeMachine** ptr,char* machCode)
+int proccessInstruction(char* token ,int* LC ,int* IC, nodeSymbol** head,nodeMachine** ptr,char* machCode)
 {
 	int errorFlag=0;
 
@@ -127,7 +125,7 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 
 			strcat(machCode, decimal_to_binary(0, 6));/*append unused zeros*/
 
-			addMachineNode(ptr, *Address, machCode,'I');
+			addMachineNode(ptr, *IC, machCode,'I');
 
 		}
 		else if (!strcmp(token, "mvhi") || !strcmp(token, "mvlo")) /* In case of 1 Register*/
@@ -147,7 +145,7 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 
 			strcat(machCode, decimal_to_binary(0, 6));/*append unused zeros*/
 
-			addMachineNode(ptr, *Address, machCode,'I');
+			addMachineNode(ptr, *IC, machCode,'I');
 
 		}
 		/*Regular case of 3 Registers */
@@ -176,7 +174,7 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 
 			strcat(machCode, decimal_to_binary(0, 6));/*append unused zeros*/
 
-			addMachineNode(ptr, *Address, machCode,'I');
+			addMachineNode(ptr, *IC, machCode,'I');
 		}
 
 	}
@@ -204,16 +202,8 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 			strcat(machCode, decimal_to_binary(rs_param, 5)); /*Append Rt*/
 
 
-			token = strtok(NULL, "\n");
 
-			if (searchSymbol(head, token))
-			{
-
-				strcat(machCode, decimal_to_binary(returnAddress(head, token) - *Address, 16)); /*Calculate the Immidiate */
-
-			}
-
-			addMachineNode(ptr, *Address, machCode,'I');
+			addMachineNode(ptr, *IC, machCode,'I');
 
 
 		}
@@ -233,7 +223,6 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 		if (checkLimits(im_param))
 		{
 			printf("error in line %d,number out of boundary\n", *LC);
-			*Address = *Address + 4;
 			*LC = *LC +1;
 			errorFlag = 1;
 
@@ -248,13 +237,14 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 		strcat(machCode, decimal_to_binary(rt_param, 5));
 		strcat(machCode, decimal_to_binary(im_param, 16));
 
-		addMachineNode(ptr, *Address, machCode,'I');
+		addMachineNode(ptr, *IC, machCode,'I');
 		}
 
 	}
 	else /* JMP TYPE*/
 	{
 		int im_param;
+		int ifAddedFlag=0;
 		InitMachCode(machCode);
 
 		strcat(machCode, decimal_to_binary(getOpcode(token), 6)); /*Append Opcode*/
@@ -264,7 +254,6 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 			strcat(machCode, decimal_to_binary(0, 26));
 
 
-			/*addMachineNode(&ptr, Address, machCode);*/
 		}
 
 		else if (!strcmp(token, "jmp"))
@@ -277,9 +266,10 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 				token = token + 1;
 				im_param = atoi(token);
 				strcat(machCode, decimal_to_binary(im_param, 25)); /*Append Opcode*/
-				addMachineNode(ptr, *Address, machCode,'I');
-				*Address = *Address + 4;
+				addMachineNode(ptr, *IC, machCode,'I');
 				*LC = *LC +1;
+				ifAddedFlag=1;
+
 
 			}
 			else
@@ -306,21 +296,26 @@ int proccessInstruction(char* token ,int* Address,int* LC ,nodeSymbol** head,nod
 			if (isExtern(head, token))/*If label is extern append zeros*/
 			{
 				strcat(machCode, decimal_to_binary(0, 26));
+
 			}
-			else
+		/*	else
 			{
 
-				strcat(machCode, decimal_to_binary(returnAddress(head, token) - *Address, 24)); /*Apped Zero for non register for J type*/
-			}
+				strcat(machCode, decimal_to_binary(returnAddress(head, token) - *Address, 24));
+
+			}*/
 
 		}
-		addMachineNode(ptr, *Address, machCode,'I');
+		if(!ifAddedFlag)
+		{
+		addMachineNode(ptr, *IC, machCode,'I');
+		}
 
 	}
 	return errorFlag;
 }
 
-void proccessLables(char* token ,int* Address, nodeSymbol** head )
+void proccessLables(char* token, nodeSymbol** head )
 {
 	char* attribute;
 
@@ -332,11 +327,9 @@ void proccessLables(char* token ,int* Address, nodeSymbol** head )
 	{
 		addSymbolNode(head, token, 0, attribute);
 	}
-	else if(strcmp(attribute ,"entry"))
-	{
-		addSymbolNode(head, token, *Address, attribute);
-	}
+
 }
+
 
 int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC, int* IC, FILE* filename)
 {
@@ -345,7 +338,7 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 	char* tempResult;
 	char* temp;
 	char machCode[33] = {0};
-	int LC = 1, errorFlag = 0, Address = 100,lineSize;
+	int LC = 1, errorFlag = 0,lineSize;
 
 	char line[MAX_LINE], * result;
 
@@ -378,7 +371,6 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 			if (isGuidance(tempLabel) || isInstruction(tempLabel)) /*Check if label is keyword*/
 			{
 				printf("error in line %d,Label name is a keyword\n", LC);
-				Address = Address + 4;
 				LC++;
 				errorFlag = 1;
 				continue;
@@ -386,7 +378,6 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 			if (searchSymbol(head, tempLabel))/*check if exist in the symboltable*/
 			{
 				printf("error in line %d,Label Already Exist\n", LC);
-				Address = Address + 4;
 				LC++;
 				errorFlag = 1;
 				continue;
@@ -404,9 +395,9 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 
 			if (isGuidance(token)) /*Check if Guidance*/
 			{
-				addSymbolNode(head, tempLabel, Address, "data"); /*add to Symbol*/
+				addSymbolNode(head, tempLabel, *DC , "data"); /*add to Symbol*/
 
-				proccessGuidance(token,&Address,DC,&LC,ptr,machCode);
+				proccessGuidance(token,DC,&LC,ptr,machCode);
 				continue;
 
 
@@ -414,21 +405,21 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 			}
 			else if (isInstruction(token))
 			{
-				*IC = *IC + 4;
-				addSymbolNode(head, tempLabel, Address, "code"); /*Add Symbol to the symbol Tabel*/
+
+				addSymbolNode(head, tempLabel, *IC , "code"); /*Add Symbol to the symbol Tabel*/
 
 				/*Get the 3 Registers and edit the machine code*/
-				if(proccessInstruction(token,&Address,&LC,head,ptr,machCode))
+				if(proccessInstruction(token,&LC,IC,head,ptr,machCode))
 				{
 					errorFlag=1;
 				}
-
+				*IC = *IC + 4;
 
 
 			}
 			else /* is Entry or Extern*/
 			{
-				proccessLables(token,&Address,head);
+				proccessLables(token,head);
 				LC++;
 				continue;
 
@@ -440,11 +431,11 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 		{
 			if (isGuidance(token)) /*Check if Guidance*/
 			{
-				proccessGuidance(token,&Address,DC,&LC,ptr,machCode);
+				proccessGuidance(token,DC,&LC,ptr,machCode);
 			}
 			else
 			{
-				proccessLables(token,&Address,head);
+				proccessLables(token,head);
 				LC++;
 				continue;
 
@@ -454,19 +445,21 @@ int firstPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, int* DC
 		{
 			if (isInstruction(token))
 			{
-				*IC = *IC + 4;
 
-				if(proccessInstruction(token,&Address,&LC,head,ptr,machCode))
+				if(proccessInstruction(token,&LC,IC,head,ptr,machCode))
 				{
 					errorFlag=1;
 				}
+				*IC = *IC + 4;
 
 			}
 		}
 		InitMachCode(machCode);
-		Address = Address + 4;
 		LC++;
 	}
+	updateAddress(head,IC);
+	updateMemValue(ptr,IC);
+
 	rewind(filename);
 
 	return errorFlag;
