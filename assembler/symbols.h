@@ -44,3 +44,6 @@ int returnAddress(nodeSymbol** p_head, char* name);
 
 
 void addAttribute(nodeSymbol** p_head, char* name, char* attribute);
+
+
+void updateAddress(nodeSymbol** p_head , int* ICF);
