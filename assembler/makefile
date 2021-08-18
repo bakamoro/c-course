@@ -1,13 +1,13 @@
-all: assembler main.o data.o firstpass.o secondpass.o symbols.o writefiles.o helpers.o check_error.o line_handler.o label_handler.o parameters_hundler.o read.o hash_table.o
-assembler: main.o data.o firstpass.o secondpass.o symbols.o writefiles.o helpers.o check_error.o line_handler.o label_handler.o parameters_hundler.o read.o hash_table.o
-	gcc -O0 -g -ansi -Wall -pedantic main.o data.o firstpass.o secondpass.o symbols.o writefiles.o helpers.o check_error.o label_handler.o parameters_hundler.o read.o line_handler.o hash_table.o -lm -o assembler
+all: assembler main.o data.o firstpass.o secondpass.o symbols.o writefiles.o helpers.o utils.o check_error.o line_handler.o label_handler.o parameters_hundler.o read.o hash_table.o
+assembler: main.o data.o firstpass.o secondpass.o symbols.o writefiles.o helpers.o utils.o check_error.o line_handler.o label_handler.o parameters_hundler.o read.o hash_table.o
+	gcc -O0 -g -ansi -Wall -pedantic main.o data.o firstpass.o secondpass.o symbols.o writefiles.o helpers.o utils.o check_error.o label_handler.o parameters_hundler.o read.o line_handler.o hash_table.o -lm -o assembler
 main.o: main.c data.h firstpass.h secondpass.h symbols.h writefiles.h globals.h helpers.h check_error.h
 	gcc -O0 -g -c -ansi -Wall -pedantic main.c -o main.o
 data.o: data.c 
 	gcc -O0 -g -c -ansi -Wall -pedantic data.c -o data.o
-firstpass.o: firstpass.c data.h secondpass.h symbols.h writefiles.h globals.h helpers.h
+firstpass.o: firstpass.c data.h secondpass.h symbols.h writefiles.h globals.h helpers.h utils.h
 	gcc -O0 -g -c -ansi -Wall -pedantic firstpass.c -o firstpass.o 
-secondpass.o: secondpass.c firstpass.h data.h symbols.h writefiles.h globals.h helpers.h
+secondpass.o: secondpass.c firstpass.h data.h symbols.h writefiles.h globals.h helpers.h utils.h
 	gcc -O0 -g -c -ansi -Wall -pedantic secondpass.c -o secondpass.o
 symbols.o: symbols.c helpers.h globals.h data.h writefiles.h
 	gcc -O0 -g -c -ansi -Wall -pedantic symbols.c -o symbols.o
@@ -15,6 +15,8 @@ writefiles.o: writefiles.c globals.h firstpass.h secondpass.h symbols.h data.h h
 	gcc -O0 -g -c -ansi -Wall -pedantic writefiles.c -o writefiles.o
 helpers.o: helpers.c
 	gcc -O0 -g -c -ansi -Wall -pedantic helpers.c -o helpers.o
+utils.o: utils.c globals.h
+	gcc -O0 -g -c -ansi -Wall -pedantic utils.c -o utils.o
 check_error.o: check_error.c hash_table.h label_handler.h line_handler.h
 	gcc -O0 -g -c -ansi -Wall -pedantic check_error.c -o check_error.o
 line_handler.o: line_handler.c read.h label_handler.h parameters_hundler.h
@@ -30,7 +32,6 @@ hash_table.o: hash_table.c
 
 clean:
 		rm *.o
-		
 
 	
 	
