@@ -312,7 +312,7 @@ int secondPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, FILE* 
                 attribute = token + 1;/*Get Attribute Withouth "." */
 
                 token = strtok(NULL, "\n");
-                if (!strcmp(attribute, "entry"))
+                if (!strcmp(attribute, ".entry"))
                 {
                     if (searchSymbol(head, token))
                     {
