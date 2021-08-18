@@ -83,6 +83,7 @@ void addMachineNode(nodeMachine** ptr_head, int memValue, char* machineCode,char
 						temp1->type = type;
 						ptr->next = temp1;
 						insertFlag=0;
+						break;
 
 					}
 
