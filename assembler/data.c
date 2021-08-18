@@ -190,3 +190,35 @@ void InitMachCode(char mach[])
 
 	}
 }
+
+void updateMemValue(nodeMachine** ptr,int* ICF)
+{
+	struct nodeMachine* head = *ptr;
+
+
+	if ((head) == NULL)
+	{
+
+		printf("ERROR");
+	}
+
+	else
+	{
+
+		while (head != NULL)
+		{
+			if (head->type == 'D')
+			{
+
+				head->address = head->address + *ICF;
+
+			}
+			head = head->next;
+
+		}
+
+	}
+
+
+}
+
