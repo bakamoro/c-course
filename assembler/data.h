@@ -47,3 +47,4 @@ char* getString(nodeMachine** ptr, int Address);
 void InitMachCode(char mach[]);
 
 
+void updateMemValue(nodeMachine** ptr,int* ICF);
