@@ -7,8 +7,16 @@
 #include <ctype.h>
 #include <limits.h>
 
-#pragma warning(disable : 4996)
+int checkLimits(int num)
+{
+	if (num < INT_MIN || num > INT_MAX)
+	{
+		return 1;
+	}
 
+	return 0;
+
+}
 
 
 char* convertToHex(char* binaryString)
