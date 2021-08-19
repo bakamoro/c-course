@@ -248,14 +248,7 @@ int secondPass(nodeSymbol** head, nodeMachine** ptr, nodeExtern** e_node, FILE* 
 						addAttribute(head, token, attribute);
 						continue;
 					}
-					else
-					{
 
-						errorFlag = 1;
-						LC++;
-						printf("error in line %d,this label was never used\n", LC);
-						continue;
-					}
 				}
 				else
 				{
