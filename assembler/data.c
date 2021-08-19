@@ -152,31 +152,17 @@ int checkIfMissing(nodeMachine** ptr, int Address)
 char* getString(nodeMachine** ptr, int Address)
 {
 	struct nodeMachine* head = *ptr;
-
-
-	if ((head) == NULL)
+	while (head != NULL)
 	{
-
-		printf("ERROR\n");
-	}
-
-	else
-	{
-
-		while (head != NULL)
+		if (head->address == Address)
 		{
-			if (head->address == Address)
-			{
 
-				return head->code;
-
-			}
-			head = head->next;
+			return head->code;
 
 		}
+		head = head->next;
 
 	}
-
 	return 0;
 }
 
@@ -195,30 +181,16 @@ void updateMemValue(nodeMachine** ptr,int* ICF)
 {
 	struct nodeMachine* head = *ptr;
 
-
-	if ((head) == NULL)
+	while (head != NULL)
 	{
-
-		printf("ERROR\n");
-	}
-
-	else
-	{
-
-		while (head != NULL)
+		if (head->type == 'D')
 		{
-			if (head->type == 'D')
-			{
 
-				head->address = head->address + *ICF;
-
-			}
-			head = head->next;
+			head->address = head->address + *ICF;
 
 		}
+		head = head->next;
 
 	}
-
-
 }
 

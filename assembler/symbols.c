@@ -124,13 +124,6 @@ void addAttribute(nodeSymbol** p_head, char* name, char* attribute)
 
 	struct nodeSymbol* ptr = (*p_head);
 
-	if (ptr == NULL)
-	{
-
-		printf("ERROR\n");
-	}
-
-
 	while (ptr != NULL)
 	{
 		if (!strcmp(ptr->name, name))
@@ -140,21 +133,11 @@ void addAttribute(nodeSymbol** p_head, char* name, char* attribute)
 		}
 		ptr = ptr->next;
 	}
-
-
-
 }
 
 void updateAddress(nodeSymbol** p_head , int* ICF)
 {
 	struct nodeSymbol* ptr = (*p_head);
-
-	if (ptr == NULL)
-	{
-
-		printf("ERROR\n");
-	}
-
 
 	while (ptr != NULL)
 	{
@@ -169,8 +152,3 @@ void updateAddress(nodeSymbol** p_head , int* ICF)
 		ptr = ptr->next;
 	}
 }
-
-
-
-
-
