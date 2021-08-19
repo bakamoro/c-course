@@ -127,7 +127,7 @@ void addAttribute(nodeSymbol** p_head, char* name, char* attribute)
 	if (ptr == NULL)
 	{
 
-		printf("ERROR");
+		printf("ERROR\n");
 	}
 
 
@@ -152,7 +152,7 @@ void updateAddress(nodeSymbol** p_head , int* ICF)
 	if (ptr == NULL)
 	{
 
-		printf("ERROR");
+		printf("ERROR\n");
 	}
 
 

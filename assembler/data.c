@@ -157,7 +157,7 @@ char* getString(nodeMachine** ptr, int Address)
 	if ((head) == NULL)
 	{
 
-		printf("ERROR");
+		printf("ERROR\n");
 	}
 
 	else
@@ -199,7 +199,7 @@ void updateMemValue(nodeMachine** ptr,int* ICF)
 	if ((head) == NULL)
 	{
 
-		printf("ERROR");
+		printf("ERROR\n");
 	}
 
 	else
